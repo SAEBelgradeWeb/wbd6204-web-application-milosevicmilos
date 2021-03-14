@@ -2,7 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\Users\CreateUserRequest;
+use App\Http\Requests\Users\UpdateUserRequest;
 use App\Repositories\UserRepository;
+use Exception;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 final class UserController extends Controller
 {
@@ -21,132 +26,51 @@ final class UserController extends Controller
     }
 
     /**
-     * Display a listing of users.
-     *
-     * @param Request $request
-     * @return View
+     * @return JsonResponse
      */
-    public function index(): View
+    public function index(): JsonResponse
     {
-//        $request->user()->can('manage', User::class);
-
-//        $tableHelper = new AdminTablesHelper();
-
-//        $data['table'] = $tableHelper->usersTable();
         $data['users'] = $this->userRepository
-            ->getAllUsers()
+            ->getAll()
             ->toArray();
 
-        die(json_encode($data));
-//        return view('admin.users.list', $data);
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @param Request $request
-     * @return View
-     */
-    public function create(Request $request): View
-    {
-        $request->user()->can('manage', User::class);
-
-        $data = $this->dataForCreateEditUser();
-
-        die(json_encode($data));
-
-//        return view('admin.users.create', compact('access_levels', 'user_access_options', 'skill_options'));
+        return response()->json($data);
     }
 
     /**
      * Store a newly created resource in storage.
      *
      * @param CreateUserRequest $request
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function store(CreateUserRequest $request): RedirectResponse
+    public function store(CreateUserRequest $request): JsonResponse
     {
-        $request->user()->can('manage', User::class);
+        $user = $this->userRepository->create($request->all());
 
-        $user = $this->userRepository->createUser($request->all());
-
-        die($user);
-//        return redirect()->route('users.edit')
-//            ->with('alert', ['type'=>'success', 'message' => 'User successfully created.']);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param int $id
-     * @param Request $request
-     * @return View
-     */
-    public function edit(Request $request, int $id): View
-    {
-        $request->user()->can('manage', User::class);
-
-        $data['user'] = $this->userRepository->findOrFail($id)->toArray();
-        $data = array_merge($data, $this->dataForCreateEditUser());
-
-        die(json_encode($data));
+        return response()->json(['user' => $user], 201);
     }
 
     /**
      * @param UpdateUserRequest $request
      * @param int $id
-     * @return RedirectResponse
+     * @return JsonResponse
      */
-    public function update(UpdateUserRequest $request, int $id): RedirectResponse
+    public function update(UpdateUserRequest $request, int $id): JsonResponse
     {
-        $request->user()->can('manage', User::class);
+        $user = $this->userRepository->update($id, $request->all());
 
-        $user = $this->userRepository->updateUser($id, $request->all());
-
-        die($user);
-
-//        return redirect()->route('users.edit')
-//            ->with('alert', ['type'=>'success', 'message' => 'User successfully edited.']);
+        return response()->json(['user' => $user]);
     }
 
     /**
-     * @param Request $request
      * @param int $id
-     * @return RedirectResponse
+     * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(Request $request, int $id): RedirectResponse
+    public function destroy(int $id): JsonResponse
     {
-        $request->user()->can('manage', User::class);
+        $this->userRepository->delete($id);
 
-        $this->userRepository->deleteUser($id);
-
-        die();
-
-//        return redirect()->route('users.index')
-//            ->with('alert', ['type'=>'success', 'message'=>'User successfully removed.']);
-    }
-
-    /**
-     * Prepare data for create/edit user forms.
-     *
-     * @return array
-     */
-    private function dataForCreateEditUser(): array
-    {
-        $data['roles'] = $this->roleRepository
-            ->getAllRoles();
-
-        $data['groups'] = $this->groupRepository
-            ->getAllGroups()
-            ->pluck('name', 'id')
-            ->toArray();
-
-        $data['skills'] = $this->skillRepository
-            ->getAllSkills()
-            ->pluck('name', 'id')
-            ->toArray();
-
-        return $data;
+        return response()->json([], 204);
     }
 }

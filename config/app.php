@@ -13,7 +13,7 @@ return [
     |
     */
 
-    'name' => env('APP_NAME', 'Laravel'),
+    'name' => env('APP_NAME', 'Kilo Watts'),
 
     /*
     |--------------------------------------------------------------------------
@@ -52,7 +52,8 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'http://localhost'),
+    'url' => env('APP_URL', 'https://kilo-watts.com'),
+    'api_url' => env('API_URL', 'https://api.kilo-watts.com'),
 
     'asset_url' => env('ASSET_URL', null),
 

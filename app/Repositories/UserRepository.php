@@ -20,6 +20,6 @@ final class UserRepository extends Repository
     {
         $data['password'] = bcrypt($data['password']);
 
-        return $this->create($data);
+        return parent::create($data);
     }
 }
