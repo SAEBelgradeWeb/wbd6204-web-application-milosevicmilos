@@ -7,7 +7,6 @@ use App\Http\Requests\Users\UpdateUserRequest;
 use App\Repositories\UserRepository;
 use Exception;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 final class UserController extends Controller
 {
@@ -35,6 +34,19 @@ final class UserController extends Controller
             ->toArray();
 
         return response()->json($data);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param int $id
+     * @return JsonResponse
+     */
+    public function show(int $id): JsonResponse
+    {
+        $user = $this->userRepository->get($id);
+
+        return response()->json(['user' => $user]);
     }
 
     /**

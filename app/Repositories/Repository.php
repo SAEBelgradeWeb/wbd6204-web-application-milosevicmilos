@@ -27,6 +27,15 @@ abstract class Repository
     }
 
     /**
+     * @param int $id
+     * @return Model
+     */
+    public function get(int $id): Model
+    {
+        return $this->findOrFail($id);
+    }
+
+    /**
      * @param array $data
      * @return Model
      */

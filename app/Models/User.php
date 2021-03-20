@@ -9,6 +9,10 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
 /**
+ * @property int id
+ * @property string first_name
+ * @property string last_name
+ * @property string email
  * @property string role
  */
 final class User extends Authenticatable
@@ -34,6 +38,22 @@ final class User extends Authenticatable
         'email',
         'password',
         'role',
+    ];
+
+    /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
+    protected $visible = [
+        'id',
+        'first_name',
+        'last_name',
+        'email',
+        'email_verified_at',
+        'role',
+        'created_at',
+        'updated_at',
     ];
 
     /**

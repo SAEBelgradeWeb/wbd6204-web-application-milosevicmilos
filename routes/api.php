@@ -25,7 +25,7 @@ use Illuminate\Validation\ValidationException;
 //});
 
 Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
-    Route::resource('/users', UserController::class)->middleware('can:manage,' . User::class);
+    Route::resource('/users', UserController::class)->middleware('can:manage,' . User::class)->except('put', 'create', 'edit');
 });
 
 Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Request $request) {
@@ -50,4 +50,8 @@ Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Requ
     return response()->json([
         'token' => $user->createToken($request->device_name)->plainTextToken
     ]);
+});
+
+Route::domain(Config::get('app.api_url'))->get('/test', function (Request $request) {
+    return ((new User())->getTable());
 });
