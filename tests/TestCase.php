@@ -10,10 +10,18 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    public function actAsUserWithRole(string $role): void
+    /**
+     * @param string $role
+     * @return User
+     */
+    public function actAsUserWithRole(string $role): User
     {
+        $user = User::factory()->create(['role' => $role]);
+
         Sanctum::actingAs(
-            User::factory()->create(['role' => $role])
+            $user
         );
+
+        return $user;
     }
 }

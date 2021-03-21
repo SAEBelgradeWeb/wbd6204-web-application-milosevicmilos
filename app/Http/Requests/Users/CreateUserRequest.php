@@ -7,9 +7,19 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class CreateUserRequest extends FormRequest
 {
+    public function authorize(): bool
+    {
+        if( ! $this->user()->can('manage', User::class)) {
+            throw new HttpException(403, 'You don\'t have access to this endpoint.');
+        }
+
+        return true;
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *

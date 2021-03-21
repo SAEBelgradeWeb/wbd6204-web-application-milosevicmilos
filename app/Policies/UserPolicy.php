@@ -19,7 +19,7 @@ final class UserPolicy
     public function manage(User $user): bool
     {
         if ( ! $user->hasRole(User::ROLE_ADMIN)) {
-            throw new HttpException(403, 'You don\'t have access to this endpoint.');
+            return false;
         }
 
         return true;

@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Building;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 
@@ -12,13 +13,22 @@ class DatabaseSeeder extends Seeder
      *
      * @return void
      */
-    public function run()
+    public function run(): void
     {
          User::factory()->create([
-             'email' => 'milosevic.z.milos@gmail.com',
+             'email' => 'admin@kilo-watts.com',
              'role' => User::ROLE_ADMIN
          ]);
 
-         User::factory(10)->create();
+        User::factory()->create([
+            'email' => 'regular@kilo-watts.com',
+            'role' => User::ROLE_REGULAR
+        ]);
+
+         User::factory(10)->create([
+             'role' => User::ROLE_REGULAR
+         ]);
+
+         Building::factory(50)->create();
     }
 }

@@ -61,8 +61,9 @@ abstract class APITest extends TestCase
     /**
      * @param string $role
      * @param Model $modelType
+     * @param array $attribures
      */
-    public function userWithRoleCanGetOneModelOfType(string $role, Model $modelType): void
+    public function userWithRoleCanGetOneModelOfType(string $role, Model $modelType, array $attribures = []): void
     {
         $this->actAsUserWithRole($role);
 

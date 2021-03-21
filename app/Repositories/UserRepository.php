@@ -7,6 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 
 final class UserRepository extends Repository
 {
+    /**
+     * UserRepository constructor.
+     * @param User $userModel
+     */
     public function __construct(User $userModel)
     {
         parent::__construct($userModel);

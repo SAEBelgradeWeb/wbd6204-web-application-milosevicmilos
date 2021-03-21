@@ -2,6 +2,7 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -41,6 +42,10 @@ final class Handler extends ExceptionHandler
                     'message' => $exception->getMessage(),
                     'errors' => $exception->errors()
                 ], $exception->status);
+            }
+
+            if ($exception instanceof AuthenticationException) {
+                return response()->json(['message' => $exception->getMessage()], 401);
             }
 
             if ($exception instanceof HttpException) {

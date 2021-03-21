@@ -1,13 +1,14 @@
 <?php
 
+use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\UserController;
+use App\Models\Building;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 /*
 |--------------------------------------------------------------------------
@@ -20,12 +21,9 @@ use Illuminate\Validation\ValidationException;
 |
 */
 
-//Route::middleware('auth:api')->get('/user', function (Request $request) {
-//    return $request->user();
-//});
-
 Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
-    Route::resource('/users', UserController::class)->middleware('can:manage,' . User::class)->except('put', 'create', 'edit');
+    Route::resource('/users', UserController::class)->except('put', 'create', 'edit');
+    Route::resource('/buildings', BuildingController::class)->except('put', 'create', 'edit');
 });
 
 Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Request $request) {

@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Users\CreateUserRequest;
 use App\Http\Requests\Users\UpdateUserRequest;
+use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
+use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class UserController extends Controller
 {
@@ -25,10 +28,16 @@ final class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @return JsonResponse
+     * @throws HttpException
      */
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
+        if( ! $request->user()->can('manage', User::class)) {
+            throw new HttpException(403, 'You don\'t have access to this endpoint.');
+        }
+
         $data['users'] = $this->userRepository
             ->getAll()
             ->toArray();
@@ -37,21 +46,22 @@ final class UserController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
      */
-    public function show(int $id): JsonResponse
+    public function show(Request $request, int $id): JsonResponse
     {
+        if( ! $request->user()->can('manage', User::class)) {
+            throw new HttpException(403, 'You don\'t have access to this endpoint.');
+        }
+
         $user = $this->userRepository->get($id);
 
         return response()->json(['user' => $user]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param CreateUserRequest $request
      * @return JsonResponse
      */
@@ -75,12 +85,17 @@ final class UserController extends Controller
     }
 
     /**
+     * @param Request $request
      * @param int $id
      * @return JsonResponse
      * @throws Exception
      */
-    public function destroy(int $id): JsonResponse
+    public function destroy(Request $request, int $id): JsonResponse
     {
+        if( ! $request->user()->can('manage', User::class)) {
+            throw new HttpException(403, 'You don\'t have access to this endpoint.');
+        }
+
         $this->userRepository->delete($id);
 
         return response()->json([], 204);
