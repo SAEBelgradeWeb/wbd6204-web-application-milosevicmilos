@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\Buildings;
+namespace App\Http\Requests\Rooms;
 
 use App\Models\User;
 use App\Repositories\BuildingRepository;
@@ -13,8 +13,10 @@ use Symfony\Component\HttpKernel\Exception\HttpException;
 /**
  * @property int $user_id
  */
-final class CreateBuildingRequest extends FormRequest
+final class CreateRoomRequest extends FormRequest
 {
+    // TODO: Validate if user is REGULAR and owns the building.
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -23,17 +25,10 @@ final class CreateBuildingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'min:1'],
+            'floor_id' => ['required', 'integer', 'min:1'],
             'name' => ['required', 'string', 'min:3', 'max:255'],
-            'address' => ['required', 'string', 'min:3', 'max:255'],
+            'size' => ['required', 'integer', 'min:1', 'max:1000'],
         ];
-    }
-
-    public function passedValidation(): void
-    {
-        if ($this->user()->hasRole(User::ROLE_REGULAR)) {
-            $this['user_id'] = $this->user()->id;
-        }
     }
 
     /**

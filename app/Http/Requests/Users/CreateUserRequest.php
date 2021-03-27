@@ -28,8 +28,8 @@ final class CreateUserRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'first_name' => ['required', 'min:3', 'max:255'],
-            'last_name' => ['required', 'min:3', 'max:255'],
+            'first_name' => ['required', 'string', 'min:3', 'max:255'],
+            'last_name' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')],
             'password' => ['required', 'string', 'min:6', 'confirmed'],
             'role' => ['required', 'string', Rule::in(User::ROLES)],

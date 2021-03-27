@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-final class CreateBuildingsTable extends Migration
+final class CreateRoomsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,15 +13,15 @@ final class CreateBuildingsTable extends Migration
      */
     public function up(): void
     {
-        Schema::create('buildings', function (Blueprint $table) {
+        Schema::create('rooms', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')
+            $table->foreignId('floor_id')
                 ->constrained()
                 ->references('id')
-                ->on('users')
+                ->on('floors')
                 ->onDelete('cascade');
             $table->string('name');
-            $table->string('address');
+            $table->unsignedSmallInteger('size');
             $table->timestamps();
         });
     }
@@ -33,6 +33,6 @@ final class CreateBuildingsTable extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('buildings');
+        Schema::dropIfExists('rooms');
     }
 }

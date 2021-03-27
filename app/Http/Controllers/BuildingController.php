@@ -33,18 +33,15 @@ final class BuildingController extends Controller
      */
     public function index(Request $request): JsonResponse
     {
-        $data['buildings'] = $this->getBuildings($request->user());
-
-        return response()->json($data);
+        return response()->json([
+            'buildings' => $this->getBuildings($request->user())
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param Request $request
      * @param int $id
      * @return JsonResponse
-     * @throws HttpException
      */
     public function show(Request $request, int $id): JsonResponse
     {
@@ -58,16 +55,14 @@ final class BuildingController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
      * @param CreateBuildingRequest $request
      * @return JsonResponse
      */
     public function store(CreateBuildingRequest $request): JsonResponse
     {
-        $user = $this->buildingRepository->create($request->all());
-
-        return response()->json(['building' => $user], 201);
+        return response()->json([
+            'building' => $this->buildingRepository->create($request->all())
+        ], 201);
     }
 
     /**
@@ -78,9 +73,9 @@ final class BuildingController extends Controller
      */
     public function update(UpdateBuildingRequest $request, int $id): JsonResponse
     {
-        $building = $this->buildingRepository->update($id, $request->all());
-
-        return response()->json(['building' => $building]);
+        return response()->json([
+            'building' => $this->buildingRepository->update($id, $request->all())
+        ]);
     }
 
     /**

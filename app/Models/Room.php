@@ -7,10 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
-/**
- * @property int id
- */
-final class Building extends Model
+final class Room extends Model
 {
     use HasFactory;
 
@@ -20,9 +17,9 @@ final class Building extends Model
      * @var array
      */
     protected $fillable = [
-        'user_id',
+        'floor_id',
         'name',
-        'address',
+        'size',
     ];
 
     /**
@@ -32,10 +29,9 @@ final class Building extends Model
      */
     protected $visible = [
         'id',
-        'user_id',
+        'floor_id',
         'name',
-        'address',
-        'floors',
+        'size',
         'created_at',
         'updated_at',
     ];
@@ -43,16 +39,16 @@ final class Building extends Model
     /**
      * @return BelongsTo
      */
-    public function user(): BelongsTo
+    public function floor(): BelongsTo
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(Floor::class);
     }
 
     /**
      * @return HasMany
      */
-    public function floors(): HasMany
+    public function appliances(): HasMany
     {
-        return $this->hasMany(Floor::class);
+        return $this->hasMany(Appliance::class);
     }
 }

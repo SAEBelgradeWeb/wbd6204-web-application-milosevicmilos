@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\BuildingController;
+use App\Http\Controllers\BuildingFloorController;
+use App\Http\Controllers\BuildingFloorRoomController;
 use App\Http\Controllers\UserController;
-use App\Models\Building;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -22,10 +24,14 @@ use Illuminate\Support\Facades\Validator;
 */
 
 Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
-    Route::resource('/users', UserController::class)->except('put', 'create', 'edit');
-    Route::resource('/buildings', BuildingController::class)->except('put', 'create', 'edit');
+    Route::resource('users', UserController::class)->except('put', 'create', 'edit');
+    Route::resource('buildings', BuildingController::class)->except('put', 'create', 'edit');
+    Route::resource('buildings.floors', BuildingFloorController::class)->except('put', 'create', 'edit');
+    Route::resource('buildings.floors.rooms', BuildingFloorRoomController::class)->except('put', 'create', 'edit');
+    Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
 });
 
+// TODO: Move to a separate controller
 Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Request $request) {
     $validator = Validator::make($request->all(), [
         'email' => 'required|email',
@@ -50,6 +56,7 @@ Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Requ
     ]);
 });
 
+// TODO: Remove in the end.
 Route::domain(Config::get('app.api_url'))->get('/test', function (Request $request) {
     return ((new User())->getTable());
 });
