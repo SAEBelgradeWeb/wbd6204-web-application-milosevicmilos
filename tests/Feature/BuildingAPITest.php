@@ -16,6 +16,8 @@ final class BuildingAPITest extends APITest
 {
     use RefreshDatabase;
 
+    // TODO: You cannot change "user_id" test.
+
     public function test_regular_user_cannot_access_other_users_buildings(): void
     {
         $this->actAsUserWithRole(User::ROLE_REGULAR);

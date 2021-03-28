@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Http\Requests\Buildings;
+namespace App\Http\Requests\Appliances;
 
 use App\Models\User;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
-/**
- * @property int $user_id
- */
-final class CreateBuildingRequest extends FormRequest
+final class FilterAppliancesRequest extends FormRequest
 {
     /**
      * Get the validation rules that apply to the request.
@@ -20,9 +17,10 @@ final class CreateBuildingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'min:1'],
-            'name' => ['required', 'string', 'min:3', 'max:255'],
-            'address' => ['required', 'string', 'min:3', 'max:255'],
+            'user_id' => ['integer', 'min:1'],
+            'building_id' => ['integer', 'min:1'],
+            'floor_id' => ['integer', 'min:1'],
+            'room_id' => ['integer', 'min:1'],
         ];
     }
 
@@ -31,6 +29,23 @@ final class CreateBuildingRequest extends FormRequest
         if ($this->user()->hasRole(User::ROLE_REGULAR)) {
             $this['user_id'] = $this->user()->id;
         }
+
+        if ( ! $this->exists('user_id')) {
+            $this['user_id'] = null;
+        }
+
+        if ( ! $this->exists('building_id')) {
+            $this['building_id'] = null;
+        }
+
+        if ( ! $this->exists('floor_id')) {
+            $this['floor_id'] = null;
+        }
+
+        if ( ! $this->exists('room_id')) {
+            $this['room_id'] = null;
+        }
+
     }
 
     /**

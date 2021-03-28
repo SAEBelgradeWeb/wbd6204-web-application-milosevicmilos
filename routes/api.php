@@ -56,7 +56,16 @@ Route::domain(Config::get('app.domain_api'))->post('/sanctum/token', function (R
     ]);
 });
 
-// TODO: Remove in the end.
-Route::domain(Config::get('app.domain_api'))->get('/test', function (Request $request) {
-    return ((new User())->getTable());
-});
+if (app()->environment('local')) {
+    Route::domain(Config::get('app.domain_api'))->get('/test', function (Request $request) {
+
+        //    $service = new \App\Services\ApplianceFilterService();
+        //
+        //    $appliances = $service->filterAppliances(new User(), [
+        //        'building_id' => 2
+        //    ]);
+        //
+        //
+        //    dd($appliances->toArray());
+    });
+}

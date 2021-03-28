@@ -2,25 +2,16 @@
 
 namespace App\Repositories;
 
-use App\Models\Floor;
-use Illuminate\Database\Eloquent\Collection;
+use App\Models\Room;
 
 final class RoomRepository extends Repository
 {
     /**
-     * FloorRepository constructor.
-     * @param Floor $floor
+     * RoomRepository constructor.
+     * @param Room $room
      */
-    public function __construct(Floor $floor)
+    public function __construct(Room $room)
     {
-        parent::__construct($floor);
-    }
-
-    /**
-     * @return Collection
-     */
-    public function getRoomWithAppliances(): Collection
-    {
-        return $this->model::with('appliances')->get();
+        parent::__construct($room);
     }
 }

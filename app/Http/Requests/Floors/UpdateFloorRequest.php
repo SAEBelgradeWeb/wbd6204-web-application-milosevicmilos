@@ -21,7 +21,7 @@ final class UpdateFloorRequest extends FormRequest
      */
     public function authorize(BuildingRepository $buildingRepository): bool
     {
-        return $this->authorizeUserAction($buildingRepository, $this->building);
+        return $this->authorizeBuildingManagement($buildingRepository, $this->building);
     }
 
     /**

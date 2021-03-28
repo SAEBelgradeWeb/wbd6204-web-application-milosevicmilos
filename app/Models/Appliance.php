@@ -22,6 +22,21 @@ final class Appliance extends Model
     ];
 
     /**
+     * The attributes that should be visible in serialization.
+     *
+     * @var array
+     */
+    protected $visible = [
+        'id',
+        'room_id',
+        'name',
+        'appliance_type_id',
+        'created_at',
+        'updated_at',
+        'applianceType',
+    ];
+
+    /**
      * @return BelongsTo
      */
     public function room(): BelongsTo

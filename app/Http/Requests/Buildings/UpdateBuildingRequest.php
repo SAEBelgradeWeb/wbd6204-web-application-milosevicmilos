@@ -10,7 +10,7 @@ use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * @property integer $id
+ * @property int $id
  */
 final class UpdateBuildingRequest extends FormRequest
 {

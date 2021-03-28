@@ -1,27 +1,32 @@
 <?php
 
-namespace App\Http\Requests\Floors;
+namespace App\Http\Requests\Appliances;
 
 use App\Http\Requests\Traits\AuthorizeUserAction;
-use App\Repositories\BuildingRepository;
+use App\Models\ApplianceType;
+use App\Repositories\RoomRepository;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
 
 /**
- * @property int $building
+ * @property int $id
  */
-final class CreateFloorRequest extends FormRequest
+final class UpdateApplianceRequest extends FormRequest
 {
     use AuthorizeUserAction;
 
     /**
-     * @param BuildingRepository $buildingRepository
+     * @param RoomRepository $roomRepository
      * @return bool
      */
-    public function authorize(BuildingRepository $buildingRepository): bool
+    public function authorize(RoomRepository $roomRepository): bool
     {
-        return $this->authorizeBuildingManagement($buildingRepository, $this->building);
+        if ( ! $this->exists('room_id') || $this->room_id < 1) {
+            return true;
+        }
+
+        return $this->authorizeRoomManagement($roomRepository, $this->room_id);
     }
 
     /**
@@ -32,14 +37,10 @@ final class CreateFloorRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'room_id' => ['required', 'integer', 'min:1'],
             'name' => ['required', 'string', 'min:3', 'max:255'],
-            'level' => ['required', 'integer', 'min:-50', 'max:1000'],
+            'appliance_type_id' => 'exists:' . ApplianceType::class . ',id'
         ];
-    }
-
-    public function passedValidation(): void
-    {
-        $this['building_id'] = $this->building;
     }
 
     /**

@@ -21,7 +21,7 @@ final class CreateAppliancesTable extends Migration
                 ->on('rooms')
                 ->onDelete('cascade');
             $table->string('name');
-            $table->unsignedBigInteger('appliance_type_id');
+            $table->unsignedBigInteger('appliance_type_id'); // TODO: Add constraint.
             $table->timestamps();
         });
     }

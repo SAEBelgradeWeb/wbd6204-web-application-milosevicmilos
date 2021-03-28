@@ -2,84 +2,98 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Appliance;
+use App\Http\Requests\Appliances\CreateApplianceRequest;
+use App\Http\Requests\Appliances\FilterAppliancesRequest;
+use App\Http\Requests\Appliances\UpdateApplianceRequest;
+use App\Repositories\ApplianceRepository;
+use Exception;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Symfony\Component\HttpKernel\Exception\HttpException;
 
 final class ApplianceController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @var ApplianceRepository
      */
-    public function index()
+    private $applianceRepository;
+
+    /**
+     * ApplianceRepository constructor.
+     * @param ApplianceRepository $applianceRepository
+     */
+    public function __construct(ApplianceRepository $applianceRepository)
     {
-        //
+        $this->applianceRepository = $applianceRepository;
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @param FilterAppliancesRequest $request
+     * @return JsonResponse
      */
-    public function create()
+    public function index(FilterAppliancesRequest $request): JsonResponse
     {
-        //
+        return response()->json([
+            'appliances' => $this->applianceRepository->getFilteredAppliances($request->all())->toArray()
+        ]);
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function show(Request $request, int $id): JsonResponse
     {
-        //
+        $appliance = $this->applianceRepository->get($id);
+
+        if( ! $request->user()->can('manage', $appliance)) {
+            throw new HttpException(404, 'That appliance doesn\'t have exist.');
+        }
+
+        return response()->json(['appliance' => $appliance]);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Appliance  $appliance
-     * @return \Illuminate\Http\Response
+     * @param CreateApplianceRequest $request
+     * @return JsonResponse
      */
-    public function show(Appliance $appliance)
+    public function store(CreateApplianceRequest $request): JsonResponse
     {
-        //
+        return response()->json([
+            'appliance' => $this->applianceRepository->create($request->all())
+        ], 201);
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Appliance  $appliance
-     * @return \Illuminate\Http\Response
+     * @param UpdateApplianceRequest $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws HttpException
      */
-    public function edit(Appliance $appliance)
+    public function update(UpdateApplianceRequest $request, int $id): JsonResponse
     {
-        //
+        return response()->json([
+            'appliance' => $this->applianceRepository->update($id, $request->all())
+        ]);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Appliance  $appliance
-     * @return \Illuminate\Http\Response
+     * @param Request $request
+     * @param int $id
+     * @return JsonResponse
+     * @throws Exception
      */
-    public function update(Request $request, Appliance $appliance)
+    public function destroy(Request $request, int $id): JsonResponse
     {
-        //
-    }
+        $appliance = $this->applianceRepository->get($id);
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Appliance  $appliance
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Appliance $appliance)
-    {
-        //
+        if( ! $request->user()->can('manage', $appliance)) {
+            throw new HttpException(404, 'That appliance doesn\'t have exist.');
+        }
+
+        $this->applianceRepository->delete($id);
+
+        return response()->json([], 204);
     }
 }
