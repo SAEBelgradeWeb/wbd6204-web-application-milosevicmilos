@@ -6,7 +6,6 @@ use App\Models\Building;
 use App\Models\User;
 use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Config;
 
 /**
  * Class BuildingAPITest
@@ -19,20 +18,18 @@ final class BuildingAPITest extends APITest
 
     public function test_regular_user_cannot_access_other_users_buildings(): void
     {
-        $apiDomain = Config::get('app.domain_api');
-
         $this->actAsUserWithRole(User::ROLE_REGULAR);
         $otherUser = User::factory()->create();
 
         $building = Building::factory()->create(['user_id' => $otherUser->id]);
 
-        $response = $this->get($apiDomain . '/buildings/' . $building->id);
+        $response = $this->get($this->getApiDomain() . '/buildings/' . $building->id);
         $response->assertNotFound();
 
-        $response = $this->patch($apiDomain . '/buildings/' . $building->id);
+        $response = $this->patch($this->getApiDomain() . '/buildings/' . $building->id);
         $response->assertNotFound();
 
-        $response = $this->delete($apiDomain . '/buildings/' . $building->id);
+        $response = $this->delete($this->getApiDomain() . '/buildings/' . $building->id);
         $response->assertNotFound();
     }
 
@@ -48,9 +45,7 @@ final class BuildingAPITest extends APITest
         User::factory()->count(11)->create();
         Building::factory()->count($entitiesCount)->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->getJson($apiDomain . '/buildings');
+        $response = $this->getJson($this->getApiDomain() . '/buildings');
 
         $response
             ->assertStatus(200)
@@ -82,9 +77,7 @@ final class BuildingAPITest extends APITest
            'user_id' => 5
         ]);
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->getJson($apiDomain . '/buildings');
+        $response = $this->getJson($this->getApiDomain() . '/buildings');
 
         $response
             ->assertStatus(200)
@@ -100,9 +93,7 @@ final class BuildingAPITest extends APITest
     {
         $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->postJson($apiDomain . '/buildings', [
+        $response = $this->postJson($this->getApiDomain() . '/buildings', [
             'user_id' => $loggedInUser->id,
             'name' => 'Test',
             'address' => 'User',
@@ -123,9 +114,7 @@ final class BuildingAPITest extends APITest
 
         User::factory()->count(10)->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->postJson($apiDomain . '/buildings', [
+        $response = $this->postJson($this->getApiDomain() . '/buildings', [
             'user_id' => 5,
             'name' => 'Test',
             'address' => 'User',
@@ -144,13 +133,11 @@ final class BuildingAPITest extends APITest
     {
         $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
 
-        Building::factory()->create([
+        $building = Building::factory()->create([
             'user_id' => $loggedInUser->id
         ]);
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->patchJson($apiDomain . '/buildings/1', [
+        $response = $this->patchJson($this->getApiDomain() . '/buildings/' . $building->id, [
             'user_id' => $loggedInUser->id,
             'name' => 'Test',
             'address' => 'User',
@@ -171,30 +158,40 @@ final class BuildingAPITest extends APITest
 
         User::factory()->count(10)->create();
 
-        Building::factory()->create([
-            'user_id' => 2
+        $building = Building::factory()->create([
+            'user_id' => 5
         ]);
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->postJson($apiDomain . '/buildings', [
-            'user_id' => 2,
-            'name' => 'Test',
-            'address' => 'User',
+        $response = $this->patchJson($this->getApiDomain() . '/buildings/' . $building->id, [
+            'user_id' => 5,
+            'name' => 'Test Edit',
+            'address' => 'Address',
         ]);
 
         $response
-            ->assertStatus(201)
+            ->assertStatus(200)
             ->assertJsonFragment([
-                 'user_id' => 2,
-                 'name' => 'Test',
-                 'address' => 'User',
+                 'user_id' => 5,
+                 'name' => 'Test Edit',
+                 'address' => 'Address',
              ]);
     }
 
-    /**
-     * @group test
-     */
+    public function test_regular_user_can_delete_his_building(): void
+    {
+        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
+
+        $building = Building::factory()->create([
+            'user_id' => $loggedInUser->id
+        ]);
+
+        $response = $this->deleteJson($this->getApiDomain() . '/buildings/' . $building->id);
+
+        $response
+            ->assertStatus(204)
+            ->assertNoContent();
+    }
+
     public function test_admin_can_delete_any_building(): void
     {
         $this->userWithRoleCanDeleteModelOfType(User::ROLE_ADMIN, new User());

@@ -41,7 +41,7 @@ final class BuildingRepository extends Repository
      */
     public function getAllBuildingFloors(int $buildingId): Collection
     {
-        return $this->findOrFail($buildingId)->floors()->get();
+        return $this->findOrFail($buildingId)->floors()->with('rooms')->get();
     }
 
     /**
@@ -51,7 +51,7 @@ final class BuildingRepository extends Repository
      */
     public function getBuildingFloor(int $buildingId, int $id): Model
     {
-        return $this->model->findOrFail($buildingId)->floors()->findOrFail($id);
+        return $this->model->findOrFail($buildingId)->floors()->findOrFail($id)->load('rooms');
     }
 
     /**

@@ -2,36 +2,28 @@
 
 namespace App\Http\Requests\Floors;
 
-use App\Models\User;
+use App\Http\Requests\Traits\AuthorizeUserAction;
 use App\Repositories\BuildingRepository;
 use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\ValidationException;
-use Symfony\Component\HttpKernel\Exception\HttpException;
 
 /**
- * @property integer $id
+ * @property int $building
  */
 final class UpdateFloorRequest extends FormRequest
 {
-    // TODO: Validate if user is REGULAR and owns the building. Then find the floor.
-    // TODO: Same goes when updating rooms!
+    use AuthorizeUserAction;
 
-//    /**
-//     * @param BuildingRepository $buildingRepository
-//     * @return bool
-//     */
-//    public function authorize(BuildingRepository $buildingRepository): bool
-//    {
-//        $building = $buildingRepository->get($this->building);
-//
-//        if( ! $this->user()->can('manage', $building)) {
-//            throw new HttpException(404, 'That building doesn\'t have exist.');
-//        }
-//
-//        return true;
-//    }
-//
+    /**
+     * @param BuildingRepository $buildingRepository
+     * @return bool
+     */
+    public function authorize(BuildingRepository $buildingRepository): bool
+    {
+        return $this->authorizeUserAction($buildingRepository, $this->building);
+    }
+
     /**
      * Get the validation rules that apply to the request.
      *
@@ -40,18 +32,15 @@ final class UpdateFloorRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'building_id' => ['required', 'integer', 'min:1'], // TODO: Remove this!
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'level' => ['required', 'integer', 'min:-50', 'max:1000'],
         ];
     }
 
-//    public function passedValidation(): void
-//    {
-//        if ($this->user()->hasRole(User::ROLE_REGULAR)) {
-//            $this['user_id'] = $this->user()->id;
-//        }
-//    }
+    public function passedValidation(): void
+    {
+        $this['building_id'] = $this->building;
+    }
 
     /**
      * @param Validator $validator

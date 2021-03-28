@@ -2,32 +2,59 @@
 
 namespace Tests\Feature;
 
+use App\Models\User;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Config;
+use Laravel\Sanctum\Sanctum;
 use Tests\TestCase;
 
 abstract class APITest extends TestCase
 {
+    /**
+     * @param string $role
+     * @return User
+     */
+    public function actAsUserWithRole(string $role): User
+    {
+        $user = User::factory()->create(['role' => $role]);
+
+        Sanctum::actingAs(
+            $user
+        );
+
+        return $user;
+    }
+
+    /**
+     * @return string
+     */
+    protected function getApiDomain(): string
+    {
+        return Config::get('app.domain_api');
+    }
+
+    /**
+     * @param string $role
+     * @param string $resource
+     */
     protected function userWithRoleCannotAccessEndpoints(string $role, string $resource): void
     {
-        $apiDomain = Config::get('app.domain_api');
-
         $this->actAsUserWithRole($role);
 
-        $response = $this->get($apiDomain . $resource);
+        $response = $this->get($this->getApiDomain() . $resource);
         $response->assertForbidden();
 
-        $response = $this->get($apiDomain . $resource . '/1');
+        $response = $this->get($this->getApiDomain() . $resource . '/1');
         $response->assertForbidden();
 
-        $response = $this->post($apiDomain . $resource);
+        $response = $this->post($this->getApiDomain() . $resource);
         $response->assertForbidden();
 
-        $response = $this->patch($apiDomain . $resource . '/1');
+        $response = $this->patch($this->getApiDomain() . $resource . '/1');
         $response->assertForbidden();
 
-        $response = $this->delete($apiDomain . $resource . '/1');
+        $response = $this->delete($this->getApiDomain() . $resource . '/1');
         $response->assertForbidden();
     }
 
@@ -44,9 +71,7 @@ abstract class APITest extends TestCase
 
         $modelType::factory()->count($entitiesCount)->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->getJson($apiDomain . '/' . $modelType->getTable());
+        $response = $this->getJson($this->getApiDomain() . '/' . $modelType->getTable());
 
         $response
             ->assertStatus(200)
@@ -61,18 +86,15 @@ abstract class APITest extends TestCase
     /**
      * @param string $role
      * @param Model $modelType
-     * @param array $attribures
      */
-    public function userWithRoleCanGetOneModelOfType(string $role, Model $modelType, array $attribures = []): void
+    public function userWithRoleCanGetOneModelOfType(string $role, Model $modelType): void
     {
         $this->actAsUserWithRole($role);
 
         /** @var Model $model */
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->getJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id);
+        $response = $this->getJson($this->getApiDomain() . '/' . $modelType->getTable() . '/' . $model->id);
 
         $response
             ->assertStatus(200)
@@ -83,9 +105,7 @@ abstract class APITest extends TestCase
     {
         $this->actAsUserWithRole($role);
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->postJson($apiDomain . '/' . $modelType->getTable(), $inputAttributes);
+        $response = $this->postJson($this->getApiDomain() . '/' . $modelType->getTable(), $inputAttributes);
 
         $response
             ->assertStatus(201)
@@ -103,9 +123,7 @@ abstract class APITest extends TestCase
 
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->patchJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id, $attributes);
+        $response = $this->patchJson($this->getApiDomain() . '/' . $modelType->getTable() . '/' . $model->id, $attributes);
 
         $response
             ->assertStatus(200)
@@ -122,11 +140,10 @@ abstract class APITest extends TestCase
 
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.domain_api');
-
-        $response = $this->deleteJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id);
+        $response = $this->deleteJson($this->getApiDomain() . '/' . $modelType->getTable() . '/' . $model->id);
 
         $response
-            ->assertStatus(204);
+            ->assertStatus(204)
+            ->assertNoContent();
     }
 }
