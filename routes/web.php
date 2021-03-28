@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+// TODO: Restrict to domain usage.
+
 Route::get('/', function () {
     return view('welcome');
 });

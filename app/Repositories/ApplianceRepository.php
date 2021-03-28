@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\Appliance;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 final class ApplianceRepository extends Repository
 {
@@ -31,8 +32,7 @@ final class ApplianceRepository extends Repository
      */
     public function getFilteredAppliances(array $filters)
     {
-        $query = $this->model
-            ->select(
+        $query = DB::table('appliances')->select(
                 'appliances.id AS appliance_id',
                 'appliances.name AS appliance_name',
                 'appliance_types.name AS appliance_type_name',

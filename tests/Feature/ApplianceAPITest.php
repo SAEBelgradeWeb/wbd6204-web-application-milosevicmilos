@@ -2,9 +2,12 @@
 
 namespace Tests\Feature;
 
+use App\Models\Appliance;
+use App\Models\ApplianceType;
 use App\Models\Building;
+use App\Models\Floor;
+use App\Models\Room;
 use App\Models\User;
-use Exception;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 /**
@@ -21,183 +24,151 @@ final class ApplianceAPITest extends APITest
         $this->actAsUserWithRole(User::ROLE_REGULAR);
         $otherUser = User::factory()->create();
 
-        $appliance = Building::factory()->create(['user_id' => $otherUser->id]);
+        $room = $this->createRoomForUser($otherUser);
+        $appliance = Appliance::factory()->create(['room_id' => $room->id]);
 
-        $response = $this->get($this->getApiDomain() . '/appliances/' . $building->id);
+        $response = $this->get($this->getApiDomain() . '/appliances/' . $appliance->id);
         $response->assertNotFound();
 
-        $response = $this->patch($this->getApiDomain() . '/appliances/' . $building->id);
+        $response = $this->post($this->getApiDomain() . '/appliances', [
+            'room_id' => $room->id
+        ]);
         $response->assertNotFound();
 
-        $response = $this->delete($this->getApiDomain() . '/appliances/' . $building->id);
+        $response = $this->patch($this->getApiDomain() . '/appliances/' . $appliance->id, [
+            'room_id' => $room->id
+        ]);
+        $response->assertNotFound();
+
+        $response = $this->delete($this->getApiDomain() . '/appliances/' . $appliance->id);
         $response->assertNotFound();
     }
-//
 
-    // TODO: I cannot create appliance in room id that doesnt belong to me.
-    // TODO: I cannot update appliance in room id that doesnt belong to me.
+    public function test_regular_user_can_create_appliances(): void
+    {
+        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
 
-//    /**
-//     * @throws Exception
-//     */
-//    public function test_admin_can_get_all_buildings(): void
-//    {
-//        $this->actAsUserWithRole(User::ROLE_ADMIN);
-//
-//        $entitiesCount = random_int(1, 100);
-//
-//        User::factory()->count(11)->create();
-//        Building::factory()->count($entitiesCount)->create();
-//
-//        $response = $this->getJson($this->getApiDomain() . '/buildings');
-//
-//        $response
-//            ->assertStatus(200)
-//            ->assertJsonCount($entitiesCount, 'buildings')
-//            ->assertJsonStructure([
-//                  'buildings' => [
-//                      '*' => array_values((new Building())->getVisible())
-//                  ]
-//              ]);
-//    }
-//
-//    /**
-//     * @throws Exception
-//     */
-//    public function test_regular_user_can_get_his_buildings(): void
-//    {
-//        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
-//
-//        $entitiesCount = random_int(1, 100);
-//
-//        /** @var User $loggedInUser */
-//        User::factory()->count(11)->create();
-//
-//        Building::factory()->count($entitiesCount)->create([
-//            'user_id' => $loggedInUser->id
-//        ]);
-//
-//        Building::factory()->count(10)->create([
-//           'user_id' => 5
-//        ]);
-//
-//        $response = $this->getJson($this->getApiDomain() . '/buildings');
-//
-//        $response
-//            ->assertStatus(200)
-//            ->assertJsonCount($entitiesCount, 'buildings')
-//            ->assertJsonStructure([
-//                  'buildings' => [
-//                      '*' => array_values((new Building())->getVisible())
-//                  ]
-//              ]);
-//    }
-//
-//    public function test_regular_user_can_create_building(): void
-//    {
-//        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
-//
-//        $response = $this->postJson($this->getApiDomain() . '/buildings', [
-//            'user_id' => $loggedInUser->id,
-//            'name' => 'Test',
-//            'address' => 'User',
-//        ]);
-//
-//        $response
-//            ->assertStatus(201)
-//            ->assertJsonFragment([
-//                 'user_id' => $loggedInUser->id,
-//                 'name' => 'Test',
-//                 'address' => 'User',
-//             ]);
-//    }
-//
-//    public function test_admin_can_create_building_for_any_user(): void
-//    {
-//        $this->actAsUserWithRole(User::ROLE_ADMIN);
-//
-//        User::factory()->count(10)->create();
-//
-//        $response = $this->postJson($this->getApiDomain() . '/buildings', [
-//            'user_id' => 5,
-//            'name' => 'Test',
-//            'address' => 'User',
-//        ]);
-//
-//        $response
-//            ->assertStatus(201)
-//            ->assertJsonFragment([
-//                 'user_id' => 5,
-//                 'name' => 'Test',
-//                 'address' => 'User',
-//             ]);
-//    }
-//
-//    public function test_regular_user_can_update_his_building(): void
-//    {
-//        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
-//
-//        $building = Building::factory()->create([
-//            'user_id' => $loggedInUser->id
-//        ]);
-//
-//        $response = $this->patchJson($this->getApiDomain() . '/buildings/' . $building->id, [
-//            'user_id' => $loggedInUser->id,
-//            'name' => 'Test',
-//            'address' => 'User',
-//        ]);
-//
-//        $response
-//            ->assertStatus(200)
-//            ->assertJsonFragment([
-//                 'user_id' => $loggedInUser->id,
-//                 'name' => 'Test',
-//                 'address' => 'User',
-//             ]);
-//    }
-//
-//    public function test_admin_can_update_building_for_any_user(): void
-//    {
-//        $this->actAsUserWithRole(User::ROLE_ADMIN);
-//
-//        User::factory()->count(10)->create();
-//
-//        $building = Building::factory()->create([
-//            'user_id' => 5
-//        ]);
-//
-//        $response = $this->patchJson($this->getApiDomain() . '/buildings/' . $building->id, [
-//            'user_id' => 5,
-//            'name' => 'Test Edit',
-//            'address' => 'Address',
-//        ]);
-//
-//        $response
-//            ->assertStatus(200)
-//            ->assertJsonFragment([
-//                 'user_id' => 5,
-//                 'name' => 'Test Edit',
-//                 'address' => 'Address',
-//             ]);
-//    }
-//
-//    public function test_regular_user_can_delete_his_building(): void
-//    {
-//        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
-//
-//        $building = Building::factory()->create([
-//            'user_id' => $loggedInUser->id
-//        ]);
-//
-//        $response = $this->deleteJson($this->getApiDomain() . '/buildings/' . $building->id);
-//
-//        $response
-//            ->assertStatus(204)
-//            ->assertNoContent();
-//    }
-//
-//    public function test_admin_can_delete_any_building(): void
-//    {
-//        $this->userWithRoleCanDeleteModelOfType(User::ROLE_ADMIN, new User());
-//    }
+        $room = $this->createRoomForUser($loggedInUser);
+
+        $response = $this->postJson($this->getApiDomain() . '/appliances', [
+            'room_id' => $room->id,
+            'name' => 'Test',
+            'appliance_type_id' => 1,
+        ]);
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'room_id' => $room->id,
+                'name' => 'Test',
+                'appliance_type_id' => 1,
+            ]);
+    }
+
+    public function test_admin_can_create_appliance_for_any_user(): void
+    {
+        $this->actAsUserWithRole(User::ROLE_ADMIN);
+
+        $room = $this->createRoomForUser(User::factory()->create());
+
+        $response = $this->postJson($this->getApiDomain() . '/appliances', [
+            'room_id' => $room->id,
+            'name' => 'Test Update',
+            'appliance_type_id' => 1,
+        ]);
+
+        $response
+            ->assertStatus(201)
+            ->assertJsonFragment([
+                'room_id' => $room->id,
+                'name' => 'Test Update',
+                'appliance_type_id' => 1,
+             ]);
+    }
+
+    public function test_regular_user_can_update_his_appliance(): void
+    {
+        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
+
+        $room = $this->createRoomForUser($loggedInUser);
+        $appliance = Appliance::factory()->create(['room_id' => $room->id]);
+
+        $response = $this->patchJson($this->getApiDomain() . '/appliances/' . $appliance->id, [
+            'room_id' => $room->id,
+            'name' => 'Test Update',
+            'appliance_type_id' => 1,
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'room_id' => $room->id,
+                'name' => 'Test Update',
+                'appliance_type_id' => 1,
+             ]);
+    }
+
+    public function test_admin_can_update_appliance_for_any_user(): void
+    {
+        $this->actAsUserWithRole(User::ROLE_ADMIN);
+
+        $room = $this->createRoomForUser(User::factory()->create());
+        $appliance = Appliance::factory()->create(['room_id' => $room->id]);
+
+        $response = $this->patchJson($this->getApiDomain() . '/appliances/' . $appliance->id, [
+            'room_id' => $room->id,
+            'name' => 'Test Update',
+            'appliance_type_id' => 1,
+        ]);
+
+        $response
+            ->assertStatus(200)
+            ->assertJsonFragment([
+                'room_id' => $room->id,
+                'name' => 'Test Update',
+                'appliance_type_id' => 1,
+             ]);
+    }
+
+    public function test_regular_user_can_delete_his_appliance(): void
+    {
+        $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
+
+        $room = $this->createRoomForUser($loggedInUser);
+        $appliance = Appliance::factory()->create(['room_id' => $room->id]);
+
+        $response = $this->deleteJson($this->getApiDomain() . '/appliances/' . $appliance->id);
+
+        $response
+            ->assertStatus(204)
+            ->assertNoContent();
+    }
+
+    public function test_admin_can_delete_any_appliance(): void
+    {
+        $this->actAsUserWithRole(User::ROLE_ADMIN);
+
+        $room = $this->createRoomForUser(User::factory()->create());
+        $appliance = Appliance::factory()->create(['room_id' => $room->id]);
+
+        $response = $this->deleteJson($this->getApiDomain() . '/appliances/' . $appliance->id);
+
+        $response
+            ->assertStatus(204)
+            ->assertNoContent();
+    }
+
+    /**
+     * @param User $user
+     * @return Room
+     */
+    private function createRoomForUser(User $user): Room
+    {
+        ApplianceType::create(['name' => 'Water heater']);
+
+        $building = Building::factory()->create(['user_id' => $user->id]);
+        $floor = Floor::factory()->create(['building_id' => $building->id]);
+
+        return Room::factory()->create(['floor_id' => $floor->id]);
+    }
 }
