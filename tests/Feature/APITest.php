@@ -11,7 +11,7 @@ abstract class APITest extends TestCase
 {
     protected function userWithRoleCannotAccessEndpoints(string $role, string $resource): void
     {
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $this->actAsUserWithRole($role);
 
@@ -44,7 +44,7 @@ abstract class APITest extends TestCase
 
         $modelType::factory()->count($entitiesCount)->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->getJson($apiDomain . '/' . $modelType->getTable());
 
@@ -70,7 +70,7 @@ abstract class APITest extends TestCase
         /** @var Model $model */
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->getJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id);
 
@@ -83,7 +83,7 @@ abstract class APITest extends TestCase
     {
         $this->actAsUserWithRole($role);
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->postJson($apiDomain . '/' . $modelType->getTable(), $inputAttributes);
 
@@ -103,7 +103,7 @@ abstract class APITest extends TestCase
 
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->patchJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id, $attributes);
 
@@ -122,7 +122,7 @@ abstract class APITest extends TestCase
 
         $model = $modelType::factory()->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->deleteJson($apiDomain . '/' . $modelType->getTable() . '/' . $model->id);
 

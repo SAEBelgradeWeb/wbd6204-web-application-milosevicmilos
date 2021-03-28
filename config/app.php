@@ -55,6 +55,9 @@ return [
     'url' => env('APP_URL', 'https://kilo-watts.com'),
     'api_url' => env('API_URL', 'https://api.kilo-watts.com'),
 
+    'domain' => env('APP_URL', 'kilo-watts.com'),
+    'domain_api' => env('API_URL', 'api.kilo-watts.com'),
+
     'asset_url' => env('ASSET_URL', null),
 
     /*

@@ -23,7 +23,7 @@ use Illuminate\Support\Facades\Validator;
 |
 */
 
-Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
+Route::domain(Config::get('app.domain_api'))->middleware('auth:sanctum')->group(function () {
     Route::resource('users', UserController::class)->except('put', 'create', 'edit');
     Route::resource('buildings', BuildingController::class)->except('put', 'create', 'edit');
     Route::resource('buildings.floors', BuildingFloorController::class)->except('put', 'create', 'edit');
@@ -32,7 +32,7 @@ Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(fun
 });
 
 // TODO: Move to a separate controller
-Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Request $request) {
+Route::domain(Config::get('app.domain_api'))->post('/sanctum/token', function (Request $request) {
     $validator = Validator::make($request->all(), [
         'email' => 'required|email',
         'password' => 'required',
@@ -57,6 +57,6 @@ Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Requ
 });
 
 // TODO: Remove in the end.
-Route::domain(Config::get('app.api_url'))->get('/test', function (Request $request) {
+Route::domain(Config::get('app.domain_api'))->get('/test', function (Request $request) {
     return ((new User())->getTable());
 });

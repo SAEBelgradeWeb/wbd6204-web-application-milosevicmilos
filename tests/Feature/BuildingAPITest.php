@@ -19,7 +19,7 @@ final class BuildingAPITest extends APITest
 
     public function test_regular_user_cannot_access_other_users_buildings(): void
     {
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $this->actAsUserWithRole(User::ROLE_REGULAR);
         $otherUser = User::factory()->create();
@@ -48,7 +48,7 @@ final class BuildingAPITest extends APITest
         User::factory()->count(11)->create();
         Building::factory()->count($entitiesCount)->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->getJson($apiDomain . '/buildings');
 
@@ -82,7 +82,7 @@ final class BuildingAPITest extends APITest
            'user_id' => 5
         ]);
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->getJson($apiDomain . '/buildings');
 
@@ -100,7 +100,7 @@ final class BuildingAPITest extends APITest
     {
         $loggedInUser = $this->actAsUserWithRole(User::ROLE_REGULAR);
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->postJson($apiDomain . '/buildings', [
             'user_id' => $loggedInUser->id,
@@ -123,7 +123,7 @@ final class BuildingAPITest extends APITest
 
         User::factory()->count(10)->create();
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->postJson($apiDomain . '/buildings', [
             'user_id' => 5,
@@ -148,7 +148,7 @@ final class BuildingAPITest extends APITest
             'user_id' => $loggedInUser->id
         ]);
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->patchJson($apiDomain . '/buildings/1', [
             'user_id' => $loggedInUser->id,
@@ -175,7 +175,7 @@ final class BuildingAPITest extends APITest
             'user_id' => 2
         ]);
 
-        $apiDomain = Config::get('app.api_url');
+        $apiDomain = Config::get('app.domain_api');
 
         $response = $this->postJson($apiDomain . '/buildings', [
             'user_id' => 2,
