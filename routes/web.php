@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,12 +17,14 @@ use Illuminate\Support\Facades\Route;
 
 // TODO: Restrict to domain usage.
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::domain(Config::get('app.domain'))->get('/', function () {
+    return view('pages.home', [
+        'user' => Auth::user()
+    ]);
+})->name('home');
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
-
-require __DIR__.'/auth.php';
+//Route::get('/dashboard', function () {
+//    return view('dashboard');
+//})->middleware(['auth'])->name('dashboard');
+//
+//require __DIR__.'/auth.php';
