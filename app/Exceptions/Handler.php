@@ -28,31 +28,4 @@ final class Handler extends ExceptionHandler
         'password',
         'password_confirmation',
     ];
-
-    /**
-     * Register the exception handling callbacks for the application.
-     *
-     * @return void
-     */
-    public function register(): void
-    {
-        $this->renderable(function (\Exception $exception) {
-            if ($exception instanceof ValidationException) {
-                return response()->json([
-                    'message' => $exception->getMessage(),
-                    'errors' => $exception->errors()
-                ], $exception->status);
-            }
-
-            if ($exception instanceof AuthenticationException) {
-                return response()->json(['message' => $exception->getMessage()], 401);
-            }
-
-            if ($exception instanceof HttpException) {
-                return response()->json(['message' => $exception->getMessage()], $exception->getStatusCode());
-            }
-
-            return response()->json(['message' => $exception->getMessage()], 500);
-        });
-    }
 }
