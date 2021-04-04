@@ -61,6 +61,9 @@ final class UserAPITest extends APITest
         ]);
     }
 
+    /**
+     * @group test
+     */
     public function test_admin_can_delete_user(): void
     {
         $this->userWithRoleCanDeleteModelOfType(User::ROLE_ADMIN, new User());

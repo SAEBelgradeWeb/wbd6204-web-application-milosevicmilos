@@ -52,11 +52,13 @@ return [
     |
     */
 
-    'url' => env('APP_URL', 'https://kilo-watts.com'),
+    'url' => env('URL', 'https://kilo-watts.com'),
     'api_url' => env('API_URL', 'https://api.kilo-watts.com'),
+    'app_url' => env('APP_URL', 'https://app.kilo-watts.com'),
 
-    'domain' => env('APP_URL', 'kilo-watts.com'),
-    'domain_api' => env('API_URL', 'api.kilo-watts.com'),
+    'domain' => env('DOMAIN', 'kilo-watts.com'),
+    'domain_api' => env('API_DOMAIN', 'api.kilo-watts.com'),
+    'domain_app' => env('APP_DOMAIN', 'app.kilo-watts.com'),
 
     'asset_url' => env('ASSET_URL', null),
 

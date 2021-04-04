@@ -7,14 +7,16 @@ use Tests\TestCase;
 
 final class HomepageTest extends TestCase
 {
-    /**
-     * A basic test example.
-     *
-     * @return void
-     */
-    public function testBasicTest(): void
+    public function testHomepage(): void
     {
         $response = $this->get('/');
+
+        $response->assertStatus(200);
+    }
+
+    public function testLoginPage(): void
+    {
+        $response = $this->get('/auth/login');
 
         $response->assertStatus(200);
     }

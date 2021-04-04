@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApplicationController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Route;
@@ -23,8 +24,13 @@ Route::domain(Config::get('app.domain'))->get('/', function () {
     ]);
 })->name('home');
 
-//Route::get('/dashboard', function () {
-//    return view('dashboard');
-//})->middleware(['auth'])->name('dashboard');
-//
+Route::domain(Config::get('app.domain'))->get('/auth/login', function () {
+    return view('pages.login');
+})->name('auth.login');
+
+Route::domain(Config::get('app.domain_app'))
+    ->get('/{any}', [ApplicationController::class, 'index'])
+    ->where('any', '.*')
+    ->name('dashboard');
+
 //require __DIR__.'/auth.php';

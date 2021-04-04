@@ -1,54 +1,8 @@
-<!doctype html>
-<html lang="en">
-<head>
-<!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+@extends('layouts.main-layout')
 
-    <meta name="author" content="Milos Milosevic">
-    <meta name="description" content="Track electricity consumption in your buildings!">
-    <meta name="robots" content="index, follow">
+@section('content')
 
-    <title>KiloWatts</title>
-
-    <!-- Bootstrap CSS -->
-    <link rel="stylesheet" href="{{ asset('assets-home/css/bootstrap.min.css') }}">
-
-    <!-- Custom Css -->
-    <link rel="stylesheet" type="text/css" href="assets-home/css/main.css">
-
-    <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800%7COpen+Sans:400,600,600i" rel="stylesheet">
-
-    <!-- Favicon -->
-    <link rel="icon" href="{{ asset('favicon.ico') }}">
-</head>
-<body>
-
-<!-- Header -->
-<header class="navbar-abs nav-style-3">
-    <nav class="navbar navbar-expand-lg my-nav absolute-nav">
-        <div class="container">
-            <a class="navbar-brand" href="#">
-                <h1><img src="{{ asset('assets-home/images/logo/transparent-logo.png') }}" alt="live-check-logo" /> KiloWatts</h1>
-            </a>
-            <div class="">
-                <ul class="navbar-nav ml-auto">
-                    @if( ! $user)
-                        <li class="menu-item nav-button">
-                            <a class="nav-link" href=>Login</a>
-                        </li>
-                    @else
-                        <li class="menu-item nav-button">
-                            <a class="nav-link" href>Dashboard</a>
-                        </li>
-                    @endif
-                </ul>
-            </div>
-        </div>
-    </nav>
-</header>
-<!-- Header End -->
+@include('partials.header')
 
 <!-- Banner -->
 <div class="banner primary-bg call-to-action-bg">
@@ -126,25 +80,25 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" href="#electricity-consumption" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/electricity-consumption.png" alt="confirmation">
+                            <img src="{{ asset('assets-home/images/electricity-consumption.png" alt="confirmation') }}">
                             <span>Track Consumption</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#save-energy" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/save-energy.png" alt="multiple">
+                            <img src="{{ asset('assets-home/images/save-energy.png') }}" alt="multiple">
                             <span>Save Energy</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#usage-statistics" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/usage-statistics.png" alt="statistics">
+                            <img src="{{ asset('assets-home/images/usage-statistics.png') }}" alt="statistics">
                             <span>Usage Statistics</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#reduce-bills" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/reduce-bills.png" alt="locations">
+                            <img src="{{ asset('assets-home/images/reduce-bills.png') }}" alt="locations">
                             <span>Reduce Bills</span>
                         </a>
                     </li>
@@ -163,7 +117,7 @@
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/electricity-consumption.png" class="img-fluid"
+                                    <img src="{{ asset('assets-home/images/electricity-consumption.png') }}" class="img-fluid"
                                          alt="confirmation" />
                                 </div>
                             </div>
@@ -183,7 +137,7 @@
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/save-energy.png" class="img-fluid"
+                                    <img src="{{ asset('assets-home/images/save-energy.png') }}" class="img-fluid"
                                          alt="multiple" />
                                 </div>
                             </div>
@@ -201,7 +155,7 @@
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/usage-statistics.png" class="img-fluid"
+                                    <img src="{{ asset('assets-home/images/usage-statistics.png') }}" class="img-fluid"
                                          alt="statistics" />
                                 </div>
                             </div>
@@ -220,7 +174,7 @@
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/reduce-bills.png" class="img-fluid"
+                                    <img src="{{ asset('assets-home/images/reduce-bills.png') }}" class="img-fluid"
                                          alt="locations" />
                                 </div>
                             </div>
@@ -260,10 +214,5 @@
         </div>
     </div>
 </footer>
-<!-- Footer End -->
 
-<!-- JS Libraries -->
-<script src="{{ asset('assets-home/js/jquery.min.js') }}"></script>
-<script src="{{ asset('assets-home/js/bootstrap.min.js')}}"></script>
-</body>
-</html>
+@endsection

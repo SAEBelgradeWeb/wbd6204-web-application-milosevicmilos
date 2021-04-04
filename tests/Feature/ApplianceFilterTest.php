@@ -56,9 +56,6 @@ final class ApplianceFilterTest extends APITest
             ]);
     }
 
-    /**
-     * @group test
-     */
     public function test_admin_can_get_all_appliances_of_specified_user(): void
     {
         $this->actAsUserWithRole(User::ROLE_ADMIN);
