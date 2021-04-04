@@ -31,7 +31,7 @@ abstract class APITest extends TestCase
      */
     protected function getApiDomain(): string
     {
-        return Config::get('app.domain_api');
+        return Config::get('app.api_url');
     }
 
     /**

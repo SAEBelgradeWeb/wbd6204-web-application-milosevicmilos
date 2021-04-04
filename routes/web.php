@@ -16,19 +16,17 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-// TODO: Restrict to domain usage.
-
-Route::domain(Config::get('app.domain'))->get('/', function () {
+Route::domain(Config::get('app.url'))->get('/', function () {
     return view('pages.home', [
         'user' => Auth::user()
     ]);
 })->name('home');
 
-Route::domain(Config::get('app.domain'))->get('/auth/login', function () {
+Route::domain(Config::get('app.url'))->get('/auth/login', function () {
     return view('pages.login');
 })->name('auth.login');
 
-Route::domain(Config::get('app.domain_app'))
+Route::domain(Config::get('app.dashboard_url'))
     ->get('/{any}', [ApplicationController::class, 'index'])
     ->where('any', '.*')
     ->name('dashboard');
