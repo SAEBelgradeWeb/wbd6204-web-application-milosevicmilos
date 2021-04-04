@@ -21,27 +21,20 @@
     <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700,800%7COpen+Sans:400,600,600i" rel="stylesheet">
 
     <!-- Favicon -->
-    <link rel="icon" href="favicon.ico">
+    <link rel="icon" href="{{ asset('favicon.ico') }}">
 </head>
 <body>
 
 <!-- Header -->
 <header class="navbar-abs nav-style-3">
-    <nav class="navbar navbar-expand-lg markesia-nav absolute-nav">
+    <nav class="navbar navbar-expand-lg my-nav absolute-nav">
         <div class="container">
             <a class="navbar-brand" href="#">
-                <h1 style="font-size: 5.0rem; color: #fff;"><img width="75px;" src="{{ asset('assets-home/images/logo/transparent-logo.png') }}" alt="live-check-logo" /> KiloWatts</h1>
+                <h1><img src="{{ asset('assets-home/images/logo/transparent-logo.png') }}" alt="live-check-logo" /> KiloWatts</h1>
             </a>
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
-                    aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="ti-menu"></span>
-            </button>
-            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <div class="">
                 <ul class="navbar-nav ml-auto">
                     @if( ! $user)
-                        <li class="menu-item nav-button">
-                            <a class="nav-link" href>Register</a>
-                        </li>
                         <li class="menu-item nav-button">
                             <a class="nav-link" href=>Login</a>
                         </li>
@@ -69,15 +62,14 @@
                                 <div class="banner-content">
                                     <h1>Track electricity consumption in your buildings!</h1>
                                     <h6>We <b>provide</b> a <b>service</b> to track statistics of your electricity usage.</h6>
-                                    <a href="#" class="button">Register</a>
                                 </div>
                             </div>
                         </div>
                         <div class="col-lg-6">
                             <div class="right-part form-wrap">
-                                <div class="banner-form" style="padding: 54px 26px;">
-                                    <h5>Registration form!</h5>
-                                    <p>Use self-awareness to reduce your bills.</p>
+                                <div class="banner-form">
+                                    <h5>Register here</h5>
+                                    <p>Populate registration form.</p>
                                     <form action method="POST">
                                         @csrf
                                         <div class="form-group">
@@ -85,28 +77,28 @@
                                                    placeholder="Last Name" required>
                                         </div>
                                         @error('first_name')
-                                        <span class="text-danger" style="margin-bottom: 10px; margin-top: -10px; display: block; font-size: 13px;">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                         <div class="form-group">
                                             <input name="last_name" type="text" class="form-control" id="firstName"
                                                    placeholder="First Name" required>
                                         </div>
                                         @error('last_name')
-                                        <span class="text-danger" style="margin-bottom: 10px; margin-top: -10px; display: block; font-size: 13px;">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                         <div class="form-group">
                                             <input name="email" type="email" class="form-control" id="exampleInputEmail1"
                                                    placeholder="Enter Address" required>
                                         </div>
                                         @error('email')
-                                        <span class="text-danger" style="margin-bottom: 10px; margin-top: -10px; display: block; font-size: 13px;">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                         <div class="form-group">
                                             <input name="password" type="password" class="form-control" id="password"
                                                    placeholder="Password" required>
                                         </div>
                                         @error('password')
-                                        <span class="text-danger" style="margin-bottom: 10px; margin-top: -10px; display: block; font-size: 13px;">{{ $message }}</span>
+                                        <span class="text-danger">{{ $message }}</span>
                                         @enderror
                                         <div class="form-group">
                                             <input name="password_confirmation" type="password" class="form-control" id="passwordConfirmation"
@@ -127,32 +119,32 @@
 <!-- Banner End -->
 
 <!-- Service Tab -->
-<div id="about-us" class="service-tab">
+<div class="service-tab">
     <div class="container">
         <div class="row">
             <div class="col-12">
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
-                        <a class="nav-link active" href="#search" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/undraw_growth_analytics_8btt.png" style="height: 80px;" alt="confirmation">
+                        <a class="nav-link active" href="#electricity-consumption" role="tab" data-toggle="tab">
+                            <img src="assets-home/images/electricity-consumption.png" alt="confirmation">
                             <span>Track Consumption</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#link" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/undraw_Calculator_0evy.png" style="height: 80px; " alt="multiple">
+                        <a class="nav-link" href="#save-energy" role="tab" data-toggle="tab">
+                            <img src="assets-home/images/save-energy.png" alt="multiple">
                             <span>Save Energy</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#email" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/undraw_statistic_chart_38b6.png" style="height: 80px;" alt="statistics">
+                        <a class="nav-link" href="#usage-statistics" role="tab" data-toggle="tab">
+                            <img src="assets-home/images/usage-statistics.png" alt="statistics">
                             <span>Usage Statistics</span>
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#cpa" role="tab" data-toggle="tab">
-                            <img src="assets-home/images/undraw_wallet_aym5.png" style="height: 80px;" alt="locations">
+                        <a class="nav-link" href="#reduce-bills" role="tab" data-toggle="tab">
+                            <img src="assets-home/images/reduce-bills.png" alt="locations">
                             <span>Reduce Bills</span>
                         </a>
                     </li>
@@ -167,12 +159,12 @@
         <div class="row">
             <div class="col-12">
                 <div class="tab-content service-tab-content">
-                    <div role="tabpanel" class="tab-pane fade in active show" id="search">
+                    <div role="tabpanel" class="tab-pane fade in active show" id="electricity-consumption">
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/undraw_growth_analytics_8btt.png" class="img-fluid"
-                                         alt="confirmation" style="height: 350px; display: block; margin: 0 auto;">
+                                    <img src="assets-home/images/electricity-consumption.png" class="img-fluid"
+                                         alt="confirmation" />
                                 </div>
                             </div>
                             <div class="col-lg-6 order-lg-1">
@@ -187,12 +179,12 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="link">
+                    <div role="tabpanel" class="tab-pane fade" id="save-energy">
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/undraw_Calculator_0evy.png" class="img-fluid"
-                                         alt="multiple" style="height: 350px; display: block; margin: 0 auto;">
+                                    <img src="assets-home/images/save-energy.png" class="img-fluid"
+                                         alt="multiple" />
                                 </div>
                             </div>
                             <div class="col-lg-6 order-lg-1">
@@ -205,12 +197,12 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="email">
+                    <div role="tabpanel" class="tab-pane fade" id="usage-statistics">
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/undraw_statistic_chart_38b6.png" class="img-fluid"
-                                         alt="statistics" style="height: 350px; display: block; margin: 0 auto;">
+                                    <img src="assets-home/images/usage-statistics.png" class="img-fluid"
+                                         alt="statistics" />
                                 </div>
                             </div>
                             <div class="col-lg-6 order-lg-1">
@@ -224,12 +216,12 @@
                             </div>
                         </div>
                     </div>
-                    <div role="tabpanel" class="tab-pane fade" id="cpa">
+                    <div role="tabpanel" class="tab-pane fade" id="reduce-bills">
                         <div class="row">
                             <div class="col-lg-6 order-lg-2">
                                 <div class="tab-image">
-                                    <img src="assets-home/images/undraw_wallet_aym5.png" class="img-fluid"
-                                         alt="locations" style="height: 350px; display: block; margin: 0 auto;">
+                                    <img src="assets-home/images/reduce-bills.png" class="img-fluid"
+                                         alt="locations" />
                                 </div>
                             </div>
                             <div class="col-lg-6 order-lg-1">
