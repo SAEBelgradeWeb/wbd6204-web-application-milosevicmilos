@@ -33,7 +33,6 @@ final class UpdateUserRequest extends FormRequest
             'first_name' => ['required', 'string', 'min:3', 'max:255'],
             'last_name' => ['required', 'string', 'min:3', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users')->ignore($userId)],
-            'role' => ['required', 'string', Rule::in(User::ROLES)],
         ];
     }
 

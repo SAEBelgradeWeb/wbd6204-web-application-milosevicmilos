@@ -86,6 +86,16 @@ export default {
       transition: 'Vue-Toastification__fade',
     })
 
+    // console.log(this.csrf);
+    // console.log(localStorage.key('csrf-token'));
+
+    // const cookieValue = document.cookie
+    //     .split('; ')
+    //     .find(row => row.startsWith('role='))
+    //     .split('=')[1];
+    //
+    // console.log(cookieValue);
+
     // Set Window Width in store
     store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
     const { width: windowWidth } = useWindowSize()

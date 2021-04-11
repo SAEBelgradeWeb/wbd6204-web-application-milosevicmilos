@@ -5,8 +5,28 @@ export default [
     icon: 'HomeIcon',
   },
   {
-    title: 'Second Page',
-    route: 'second-page',
+    title: 'Buildings',
+    route: 'buildings',
     icon: 'FileIcon',
+  },
+  {
+    title: 'Floors',
+    route: 'floors',
+    icon: 'FileIcon',
+  },
+  {
+    title: 'Rooms',
+    route: 'rooms',
+    icon: 'FileIcon',
+  },
+  {
+    title: 'Appliances',
+    route: 'appliances',
+    icon: 'FileIcon',
+  },
+  {
+    title: 'Users',
+    route: 'users-table',
+    icon: 'UsersIcon',
   },
 ]

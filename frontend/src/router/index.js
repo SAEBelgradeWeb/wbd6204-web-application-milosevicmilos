@@ -25,7 +25,7 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/second-page',
+      path: '/second-page/:id',
       name: 'second-page',
       component: () => import('@/views/SecondPage.vue'),
       meta: {
@@ -39,11 +39,34 @@ const router = new VueRouter({
       },
     },
     {
-      path: '/login',
-      name: 'login',
-      component: () => import('@/views/Login.vue'),
+      path: '/third-page',
+      name: 'third-page',
+      component: () => import('@/views/ThirdPage.vue'),
       meta: {
-        layout: 'full',
+        pageTitle: 'Third Page',
+        breadcrumb: [
+          {
+            text: 'Third Page',
+            active: true,
+          },
+        ],
+      },
+    },
+    {
+      path: '/users',
+      name: 'users-table',
+      component: () => import('@/views/user/UserTable.vue'),
+      meta: {
+        pageTitle: 'Users Table',
+        breadcrumb: [
+          {
+            text: 'Table',
+          },
+          {
+            text: 'Users Table',
+            active: true,
+          },
+        ],
       },
     },
     {

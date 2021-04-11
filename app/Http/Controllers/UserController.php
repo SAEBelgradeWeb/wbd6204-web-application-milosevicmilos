@@ -7,6 +7,7 @@ use App\Http\Requests\Users\UpdateUserRequest;
 use App\Models\User;
 use App\Repositories\UserRepository;
 use Exception;
+use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Symfony\Component\HttpKernel\Exception\HttpException;
@@ -69,6 +70,8 @@ final class UserController extends Controller
     {
         $user = $this->userRepository->create($request->all());
 
+//        event(new Registered($user));
+
         return response()->json(['user' => $user], 201);
     }
 
@@ -94,6 +97,10 @@ final class UserController extends Controller
     {
         if( ! $request->user()->can('manage', User::class)) {
             throw new HttpException(403, 'You don\'t have access to this endpoint.');
+        }
+
+        if ($id === 1) {
+            throw new HttpException(403, 'This user cannot be deleted.');
         }
 
         $this->userRepository->delete($id);

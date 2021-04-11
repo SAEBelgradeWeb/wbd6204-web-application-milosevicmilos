@@ -40,6 +40,22 @@ final class DatabaseSeeder extends Seeder
                            'last_name' => 'User'
                        ]);
 
+        // Deleted user
+        User::factory()->create([
+            'email' => 'deleted@kilo-watts.com',
+            'role' => User::ROLE_REGULAR,
+            'first_name' => 'Deleted',
+            'deleted_at' => now()
+        ]);
+
+        // Unverified user
+        User::factory()->create([
+            'email' => 'unverified@kilo-watts.com',
+            'role' => User::ROLE_REGULAR,
+            'first_name' => 'Unverified',
+            'email_verified_at' => null
+        ]);
+
         $buildings = Building::factory(3)->create([
                          'user_id' => $regularUser->id
                      ]);

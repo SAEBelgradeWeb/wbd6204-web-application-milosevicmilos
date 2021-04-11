@@ -22,7 +22,9 @@ Route::domain(Config::get('app.url'))->get('/', function () {
     ]);
 })->name('home');
 
-Route::domain(Config::get('app.url'))->get('/auth/login', function () {
+Route::domain(Config::get('app.url'))
+    ->middleware('guest')
+    ->get('/auth/login', function () {
     return view('pages.login');
 })->name('auth.login');
 
