@@ -5,20 +5,20 @@ Vue.use(VueRouter)
 
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.BASE_URL,
+  base: process.env.MIX_DASHBOARD_URL,
   scrollBehavior() {
     return { x: 0, y: 0 }
   },
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: () => import('@/views/Home.vue'),
+      name: 'dashboard',
+      component: () => import('@/views/Dashboard.vue'),
       meta: {
-        pageTitle: 'Home',
+        pageTitle: 'Dashboard',
         breadcrumb: [
           {
-            text: 'Home',
+            text: 'Dashboard',
             active: true,
           },
         ],

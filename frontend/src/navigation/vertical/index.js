@@ -1,28 +1,31 @@
 export default [
   {
-    title: 'Home',
-    route: 'home',
+    title: 'Dashboard',
+    route: 'dashboard',
+    icon: 'BarChart2Icon',
+  },
+  {
+    title: 'Space Management',
     icon: 'HomeIcon',
-  },
-  {
-    title: 'Buildings',
-    route: 'buildings',
-    icon: 'FileIcon',
-  },
-  {
-    title: 'Floors',
-    route: 'floors',
-    icon: 'FileIcon',
-  },
-  {
-    title: 'Rooms',
-    route: 'rooms',
-    icon: 'FileIcon',
+    children: [
+      {
+        title: 'Buildings',
+        route: 'buildings',
+      },
+      {
+        title: 'Floors',
+        route: 'floors',
+      },
+      {
+        title: 'Rooms',
+        route: 'rooms',
+      },
+    ],
   },
   {
     title: 'Appliances',
     route: 'appliances',
-    icon: 'FileIcon',
+    icon: 'BatteryChargingIcon',
   },
   {
     title: 'Users',
