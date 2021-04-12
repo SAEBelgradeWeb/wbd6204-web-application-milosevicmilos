@@ -86,6 +86,8 @@ export default {
       transition: 'Vue-Toastification__fade',
     })
 
+    // console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+
     // console.log(this.csrf);
     // console.log(localStorage.key('csrf-token'));
 
