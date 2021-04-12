@@ -80,25 +80,25 @@
                 <ul class="nav nav-tabs" role="tablist">
                     <li class="nav-item">
                         <a class="nav-link active" href="#electricity-consumption" role="tab" data-toggle="tab">
-                            <img src="{{ asset('assets-home/images/electricity-consumption.png" alt="confirmation') }}">
+                            <img src="{{ asset('assets-home/images/electricity-consumption.png') }}" alt="electricity-consumption">
                             <span>Track Consumption</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#save-energy" role="tab" data-toggle="tab">
-                            <img src="{{ asset('assets-home/images/save-energy.png') }}" alt="multiple">
+                            <img src="{{ asset('assets-home/images/save-energy.png') }}" alt="save-energy">
                             <span>Save Energy</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#usage-statistics" role="tab" data-toggle="tab">
-                            <img src="{{ asset('assets-home/images/usage-statistics.png') }}" alt="statistics">
+                            <img src="{{ asset('assets-home/images/usage-statistics.png') }}" alt="usage-statistics">
                             <span>Usage Statistics</span>
                         </a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#reduce-bills" role="tab" data-toggle="tab">
-                            <img src="{{ asset('assets-home/images/reduce-bills.png') }}" alt="locations">
+                            <img src="{{ asset('assets-home/images/reduce-bills.png') }}" alt="reduce-bills">
                             <span>Reduce Bills</span>
                         </a>
                     </li>

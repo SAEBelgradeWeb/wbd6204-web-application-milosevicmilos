@@ -155,8 +155,7 @@ return [
     |
     */
 
-//    'domain' => env('SESSION_DOMAIN', '.kilo-watts.local'),
-    'domain' => '.kilo-watts.local',
+    'domain' => env('SESSION_DOMAIN', '.kilo-watts.com'),
 
     /*
     |--------------------------------------------------------------------------
