@@ -10,6 +10,11 @@
         <div class="row">
             <div class="col">
                 <div class="banner-wrap">
+                    @if(session('status'))
+                        <div role="alert" class="alert alert-primary alert-dismissible fade show homepage-contact-us-banner" style="position: absolute; width: 1113px;">
+                            <strong>Your email verification has been sent!</strong> Please check your inbox.
+                        </div>
+                    @endif
                     <div class="row">
                         <div class="col-lg-6">
                             <div class="left-part form-wrap">
@@ -24,7 +29,7 @@
                                 <div class="banner-form">
                                     <h5>Register here</h5>
                                     <p>Populate registration form.</p>
-                                    <form action method="POST">
+                                    <form action="{{ route('register') }}" method="POST">
                                         @csrf
                                         <div class="form-group">
                                             <input name="first_name" type="text" class="form-control" id="lastName"

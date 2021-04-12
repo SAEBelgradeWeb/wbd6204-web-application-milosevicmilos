@@ -82,7 +82,7 @@
 
         <b-dropdown-divider />
 
-        <b-dropdown-item link-class="d-flex align-items-center">
+        <b-dropdown-item link-class="d-flex align-items-center" @click="logout()">
           <feather-icon
             size="16"
             icon="LogOutIcon"
@@ -100,6 +100,7 @@ import {
   BLink, BNavbarNav, BNavItemDropdown, BDropdownItem, BDropdownDivider, BAvatar,
 } from 'bootstrap-vue'
 import DarkToggler from '@core/layouts/components/app-navbar/components/DarkToggler.vue'
+import ToastificationContent from "@core/components/toastification/ToastificationContent";
 
 export default {
   components: {
@@ -112,6 +113,7 @@ export default {
 
     // Navbar Components
     DarkToggler,
+    ToastificationContent
   },
   props: {
     toggleVerticalMenuActive: {
@@ -119,5 +121,26 @@ export default {
       default: () => {},
     },
   },
+  methods: {
+    logout() {
+      console.log('Logout');
+      this.$http.post('/logout')
+          .then(result => {
+            window.location.href = process.env.MIX_APP_URL;
+          })
+          .catch(error => {
+            console.log('Error ' + error);
+            this.$toast({
+              component: ToastificationContent,
+              props: {
+                title: 'Error',
+                icon: 'XIcon',
+                variant: 'danger',
+                text: 'Something went wrong when trying to logout'
+              },
+            })
+          })
+    }
+  }
 }
 </script>

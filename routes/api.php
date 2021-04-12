@@ -1,16 +1,15 @@
 <?php
 
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\SanctumController;
 use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\BuildingFloorController;
 use App\Http\Controllers\BuildingFloorRoomController;
 use App\Http\Controllers\UserController;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Validator;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,33 +28,13 @@ Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(fun
     Route::resource('buildings.floors', BuildingFloorController::class)->except('put', 'create', 'edit');
     Route::resource('buildings.floors.rooms', BuildingFloorRoomController::class)->except('put', 'create', 'edit');
     Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
+
+    Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
-// TODO: Move to a separate controller
-Route::domain(Config::get('app.api_url'))->post('/sanctum/token', function (Request $request) {
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required',
-        'device_name' => 'required',
-    ]);
+Route::domain(Config::get('app.api_url'))->post('/sanctum/token', [SanctumController::class, 'token']);
 
-    if ($validator->fails()) {
-        return response()->json($validator->errors(), 422);
-    }
-
-    $user = User::where('email', $request->email)->first();
-
-    if (! $user || ! Hash::check($request->password, $user->password)) {
-        return response()->json([
-            'message' => ['The provided credentials are incorrect.'],
-        ], 400);
-    }
-
-    return response()->json([
-        'token' => $user->createToken($request->device_name)->plainTextToken
-    ]);
-});
-
+// TODO: Clean this up
 if (app()->environment('local')) {
     Route::domain(Config::get('app.api_url'))->get('/test', function (Request $request) {
 

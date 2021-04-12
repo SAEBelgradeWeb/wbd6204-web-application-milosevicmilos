@@ -20,8 +20,8 @@
                                     <form action method="POST">
                                         @csrf
                                         <div class="form-group">
-                                            <input name="first_name" type="text" class="form-control" id="lastName"
-                                                   placeholder="Last Name" required>
+                                            <input name="email" type="text" class="form-control" id="email"
+                                                   placeholder="Email" required>
                                         </div>
                                         @error('email')
                                         <span class="text-danger">{{ $message }}</span>

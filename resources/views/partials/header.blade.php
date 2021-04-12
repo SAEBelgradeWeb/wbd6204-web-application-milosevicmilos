@@ -10,7 +10,7 @@
                 <ul class="navbar-nav ml-auto">
                     @if( ! $user)
                         <li class="menu-item nav-button">
-                            <a class="nav-link" href="{{ route('auth.login') }}">Login</a>
+                            <a class="nav-link" href="{{ route('login') }}">Login</a>
                         </li>
                     @else
                         <li class="menu-item nav-button">
