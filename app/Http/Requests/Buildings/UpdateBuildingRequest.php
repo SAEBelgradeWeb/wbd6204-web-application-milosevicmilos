@@ -36,7 +36,6 @@ final class UpdateBuildingRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'user_id' => ['required', 'integer', 'min:1'], // TODO: Remove this!
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'address' => ['required', 'string', 'min:3', 'max:255'],
         ];

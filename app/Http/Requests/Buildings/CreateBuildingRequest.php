@@ -13,6 +13,18 @@ use Illuminate\Validation\ValidationException;
 final class CreateBuildingRequest extends FormRequest
 {
     /**
+     * Prepare the data for validation.
+     *
+     * @return void
+     */
+    protected function prepareForValidation(): void
+    {
+        if ($this->user()->hasRole(User::ROLE_REGULAR)) {
+            $this['user_id'] = $this->user()->id;
+        }
+    }
+
+    /**
      * Get the validation rules that apply to the request.
      *
      * @return array
@@ -24,13 +36,6 @@ final class CreateBuildingRequest extends FormRequest
             'name' => ['required', 'string', 'min:3', 'max:255'],
             'address' => ['required', 'string', 'min:3', 'max:255'],
         ];
-    }
-
-    public function passedValidation(): void
-    {
-        if ($this->user()->hasRole(User::ROLE_REGULAR)) {
-            $this['user_id'] = $this->user()->id;
-        }
     }
 
     /**

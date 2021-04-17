@@ -3,85 +3,83 @@ import VueRouter from 'vue-router'
 
 Vue.use(VueRouter)
 
+let routes = [
+  {
+    path: '/',
+    name: 'dashboard',
+    component: () => import('@/views/Dashboard.vue'),
+    meta: {
+      pageTitle: 'Dashboard',
+      breadcrumb: [
+        {
+          text: 'Dashboard',
+          active: true,
+        },
+      ],
+      action: 'read',
+      subject: 'Auth',
+    },
+  },
+  {
+    path: '/buildings',
+    name: 'buildings-table',
+    component: () => import('@/views/building/BuildingTable.vue'),
+    meta: {
+      pageTitle: 'Buildings Table',
+      breadcrumb: [
+        {
+          text: 'Table',
+        },
+        {
+          text: 'Buildings Table',
+          active: true,
+        },
+      ],
+      action: "manage",
+      subject: "all"
+    },
+  },
+  {
+    path: '/error-404',
+    name: 'error-404',
+    component: () => import('@/views/error/Error404.vue'),
+    meta: {
+      layout: 'full',
+    },
+  },
+  {
+    path: '*',
+    redirect: 'error-404',
+  },
+];
+
+if (localStorage.getItem('userRole') === 'ADMIN') {
+  routes.push({
+    path: '/users',
+    name: 'users-table',
+    component: () => import('@/views/user/UserTable.vue'),
+    meta: {
+      pageTitle: 'Users Table',
+      breadcrumb: [
+        {
+          text: 'Table',
+        },
+        {
+          text: 'Users Table',
+          active: true,
+        },
+      ],
+    },
+  });
+}
+
 const router = new VueRouter({
   mode: 'history',
-  base: process.env.MIX_DASHBOARD_URL,
+  base: null,
   scrollBehavior() {
     return { x: 0, y: 0 }
   },
-  routes: [
-    {
-      path: '/',
-      name: 'dashboard',
-      component: () => import('@/views/Dashboard.vue'),
-      meta: {
-        pageTitle: 'Dashboard',
-        breadcrumb: [
-          {
-            text: 'Dashboard',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/second-page/:id',
-      name: 'second-page',
-      component: () => import('@/views/SecondPage.vue'),
-      meta: {
-        pageTitle: 'Second Page',
-        breadcrumb: [
-          {
-            text: 'Second Page',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/third-page',
-      name: 'third-page',
-      component: () => import('@/views/ThirdPage.vue'),
-      meta: {
-        pageTitle: 'Third Page',
-        breadcrumb: [
-          {
-            text: 'Third Page',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/users',
-      name: 'users-table',
-      component: () => import('@/views/user/UserTable.vue'),
-      meta: {
-        pageTitle: 'Users Table',
-        breadcrumb: [
-          {
-            text: 'Table',
-          },
-          {
-            text: 'Users Table',
-            active: true,
-          },
-        ],
-      },
-    },
-    {
-      path: '/error-404',
-      name: 'error-404',
-      component: () => import('@/views/error/Error404.vue'),
-      meta: {
-        layout: 'full',
-      },
-    },
-    {
-      path: '*',
-      redirect: 'error-404',
-    },
-  ],
+  routes: routes,
 })
 
 export default router

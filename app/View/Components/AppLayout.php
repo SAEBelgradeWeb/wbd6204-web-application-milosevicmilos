@@ -4,6 +4,11 @@ namespace App\View\Components;
 
 use Illuminate\View\Component;
 
+/**
+ * Class AppLayout
+ * @package App\View\Components
+ * @deprecated
+ */
 final class AppLayout extends Component
 {
     /**

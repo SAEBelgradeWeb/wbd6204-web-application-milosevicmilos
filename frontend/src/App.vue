@@ -86,17 +86,19 @@ export default {
       transition: 'Vue-Toastification__fade',
     })
 
-    // console.log(document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    // Set localStorage
+    localStorage.setItem('userName', document.cookie
+        .split('; ')
+        .find(row => row.startsWith('first_name='))
+        .split('=')[1] + ' ' + document.cookie
+        .split('; ')
+        .find(row => row.startsWith('last_name='))
+        .split('=')[1]);
 
-    // console.log(this.csrf);
-    // console.log(localStorage.key('csrf-token'));
-
-    // const cookieValue = document.cookie
-    //     .split('; ')
-    //     .find(row => row.startsWith('role='))
-    //     .split('=')[1];
-    //
-    // console.log(cookieValue);
+    localStorage.setItem('userRole', document.cookie
+        .split('; ')
+        .find(row => row.startsWith('user_role='))
+        .split('=')[1]);
 
     // Set Window Width in store
     store.commit('app/UPDATE_WINDOW_WIDTH', window.innerWidth)
@@ -108,6 +110,6 @@ export default {
     return {
       skinClasses,
     }
-  },
+  }
 }
 </script>

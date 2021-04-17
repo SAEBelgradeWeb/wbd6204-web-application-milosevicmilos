@@ -30,15 +30,13 @@
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
             <p class="user-name font-weight-bolder mb-0">
-              John Doe
+              {{ username }}
             </p>
-            <span class="user-status">Admin</span>
           </div>
           <b-avatar
             size="40"
             variant="light-primary"
             badge
-            :src="require('@/assets/images/avatars/13-small.png')"
             class="badge-minimal"
             badge-variant="success"
           />
@@ -51,33 +49,6 @@
             class="mr-50"
           />
           <span>Profile</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon
-            size="16"
-            icon="MailIcon"
-            class="mr-50"
-          />
-          <span>Inbox</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon
-            size="16"
-            icon="CheckSquareIcon"
-            class="mr-50"
-          />
-          <span>Task</span>
-        </b-dropdown-item>
-
-        <b-dropdown-item link-class="d-flex align-items-center">
-          <feather-icon
-            size="16"
-            icon="MessageSquareIcon"
-            class="mr-50"
-          />
-          <span>Chat</span>
         </b-dropdown-item>
 
         <b-dropdown-divider />
@@ -115,11 +86,19 @@ export default {
     DarkToggler,
     ToastificationContent
   },
+  data() {
+    return {
+      username: '',
+    }
+  },
   props: {
     toggleVerticalMenuActive: {
       type: Function,
       default: () => {},
     },
+  },
+  created() {
+    this.username = localStorage.getItem('userName');
   },
   methods: {
     logout() {

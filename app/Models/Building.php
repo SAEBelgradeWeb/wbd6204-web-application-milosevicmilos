@@ -33,11 +33,32 @@ final class Building extends Model
     protected $visible = [
         'id',
         'user_id',
+        'user_name',
         'name',
         'address',
         'floors',
+        'user',
         'created_at',
         'updated_at',
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'user_name',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'date:d M Y H:i',
+        'updated_at' => 'date:d M Y H:i',
     ];
 
     /**
@@ -54,5 +75,10 @@ final class Building extends Model
     public function floors(): HasMany
     {
         return $this->hasMany(Floor::class);
+    }
+
+    public function getUserNameAttribute(): string
+    {
+        return $this->user->getName();
     }
 }

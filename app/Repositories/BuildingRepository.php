@@ -23,7 +23,7 @@ final class BuildingRepository extends Repository
      */
     public function getAll(): Collection
     {
-        return $this->model::with('floors.rooms')->get();
+        return $this->model::with(['floors.rooms', 'user'])->get();
     }
 
     /**

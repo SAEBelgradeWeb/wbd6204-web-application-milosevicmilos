@@ -58,11 +58,13 @@ final class User extends Authenticatable implements MustVerifyEmail
      */
     protected $visible = [
         'id',
+        'value',
         'first_name',
         'last_name',
         'email',
         'role',
         'role_name',
+        'label',
         'status',
         'created_at',
         'updated_at',
@@ -75,7 +77,9 @@ final class User extends Authenticatable implements MustVerifyEmail
      */
     protected $appends = [
         'role_name',
-        'status'
+        'status',
+        'value',
+        'label',
     ];
 
     /**
@@ -141,5 +145,29 @@ final class User extends Authenticatable implements MustVerifyEmail
     public function getRoleNameAttribute(): string
     {
         return self::ROLE_NAMES[$this->role];
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->first_name . ' ' . $this->last_name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelAttribute(): string
+    {
+        return $this->getName();
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueAttribute(): string
+    {
+        return $this->id;
     }
 }

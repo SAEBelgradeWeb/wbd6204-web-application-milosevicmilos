@@ -16,7 +16,7 @@ final class HomepageTest extends TestCase
 
     public function testLoginPage(): void
     {
-        $response = $this->get('/auth/login');
+        $response = $this->get('/login');
 
         $response->assertStatus(200);
     }

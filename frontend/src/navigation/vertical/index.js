@@ -1,4 +1,4 @@
-export default [
+let navigation = [
   {
     title: 'Dashboard',
     route: 'dashboard',
@@ -10,7 +10,7 @@ export default [
     children: [
       {
         title: 'Buildings',
-        route: 'buildings',
+        route: 'buildings-table',
       },
       {
         title: 'Floors',
@@ -27,9 +27,14 @@ export default [
     route: 'appliances',
     icon: 'BatteryChargingIcon',
   },
-  {
+];
+
+if (localStorage.getItem('userRole') === 'ADMIN') {
+  navigation.push({
     title: 'Users',
     route: 'users-table',
     icon: 'UsersIcon',
-  },
-]
+  });
+}
+
+export default navigation;

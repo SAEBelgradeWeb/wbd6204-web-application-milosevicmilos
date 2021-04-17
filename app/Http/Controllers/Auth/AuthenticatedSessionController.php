@@ -51,6 +51,9 @@ final class AuthenticatedSessionController extends Controller
 
         $request->session()->regenerateToken();
 
+        setcookie('user_name', null);
+        setcookie('user_role', null);
+
         return response()->json([
             'message' => 'User successfully logged out.'
         ]);

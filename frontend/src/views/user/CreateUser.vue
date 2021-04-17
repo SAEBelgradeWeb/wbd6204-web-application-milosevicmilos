@@ -11,7 +11,6 @@
       @ok="handleOk"
   >
     <form
-        ref="form"
         @submit.stop.prevent="submitUserForm"
     >
       <validation-observer ref="userFormObserver">
@@ -184,8 +183,6 @@ export default {
       this.passwordConfirmationValue = '';
     },
     handleOk(bvModalEvt) {
-      console.log(this.id);
-      console.log(this.props.id);
       // Prevent modal from closing
       bvModalEvt.preventDefault();
       // Trigger submit handler
