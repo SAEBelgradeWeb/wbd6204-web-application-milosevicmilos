@@ -29,9 +29,11 @@ final class Floor extends Model
      */
     protected $visible = [
         'id',
+        'value',
         'building_id',
         'building_name',
         'name',
+        'label',
         'level',
         'rooms',
         'room_count',
@@ -48,6 +50,8 @@ final class Floor extends Model
     protected $appends = [
         'building_name',
         'room_count',
+        'value',
+        'label',
     ];
 
     /**
@@ -80,5 +84,21 @@ final class Floor extends Model
     public function getRoomCountAttribute(): int
     {
         return $this->rooms()->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueAttribute(): string
+    {
+        return $this->id;
     }
 }

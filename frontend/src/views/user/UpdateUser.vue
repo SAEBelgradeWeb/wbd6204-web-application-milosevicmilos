@@ -151,7 +151,7 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `User "${result.data.user.first_name} ${result.data.user.last_name}" has been created`
+                  text: `User "${result.data.user.first_name} ${result.data.user.last_name}" has been updated`
                 },
               })
 

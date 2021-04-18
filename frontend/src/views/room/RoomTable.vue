@@ -9,9 +9,9 @@
             <b-col md="4">
               <b-button
                   variant="primary"
-                  v-b-modal.create-floor-form
+                  v-b-modal.create-room-form
               >
-                Create Floor
+                Create Room
               </b-button>
 
             </b-col>
@@ -69,14 +69,14 @@
                       class="text-body align-middle mr-25"
                     />
                   </template>
-                  <b-dropdown-item v-b-modal.update-floor-form @click="update(props.row)">
+                  <b-dropdown-item v-b-modal.update-room-form @click="update(props.row)">
                     <feather-icon
                       icon="Edit2Icon"
                       class="mr-50"
                     />
                     <span>Edit</span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="deleteFloor(props.row)">
+                  <b-dropdown-item @click="deleteRoom(props.row)">
                     <feather-icon
                       icon="TrashIcon"
                       class="mr-50"
@@ -141,8 +141,8 @@
             </div>
           </template>
         </vue-good-table>
-        <create-floor></create-floor>
-        <update-floor v-bind:id="this.id" v-bind:index="this.index"></update-floor>
+        <create-room></create-room>
+        <update-room v-bind:id="this.id" v-bind:index="this.index"></update-room>
       </b-card-code>
     </b-col>
   </b-row>
@@ -156,8 +156,8 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-import CreateFloor from './CreateFloor.vue'
-import UpdateFloor from './UpdateFloor.vue'
+import CreateRoom from './CreateRoom.vue'
+import UpdateRoom from './UpdateRoom.vue'
 
 export default {
   components: {
@@ -175,8 +175,8 @@ export default {
     BDropdownItem,
     ToastificationContent,
     BButton,
-    CreateFloor,
-    UpdateFloor,
+    CreateRoom,
+    UpdateRoom,
   },
   data() {
     return {
@@ -213,16 +213,20 @@ export default {
         field: 'building_name',
       },
       {
+        label: 'Floor Name',
+        field: 'floor_name',
+      },
+      {
         label: 'Name',
         field: 'name',
       },
       {
-        label: 'Room Count',
-        field: 'room_count',
+        label: 'Appliances Count',
+        field: 'appliances_count',
       },
       {
-        label: 'Level',
-        field: 'level',
+        label: 'Size',
+        field: 'size',
       },
       {
         label: 'Action',
@@ -231,9 +235,9 @@ export default {
       },
     ];
 
-    this.$http.get('/floors')
+    this.$http.get('/rooms')
       .then(result => {
-        this.rows = result.data.floors
+        this.rows = result.data.rooms
       })
   },
   methods: {
@@ -241,9 +245,9 @@ export default {
       this.id = row.id;
       this.index = row.originalIndex;
     },
-    deleteFloor(row) {
+    deleteRoom(row) {
       // TODO: Add confirm box!
-      this.$http.delete('/floors/' + row.id)
+      this.$http.delete('/rooms/' + row.id)
         .then(res => {
           this.rows.splice(row.originalIndex, 1);
           this.$toast({
@@ -252,7 +256,7 @@ export default {
               title: 'Success',
               icon: 'CheckIcon',
               variant: 'success',
-              text: `Floor "${row.name}" has been deleted`
+              text: `Room "${row.name}" has been deleted`
             },
           })
         })
@@ -264,7 +268,7 @@ export default {
               title: 'Error',
               icon: 'XIcon',
               variant: 'danger',
-              text: 'Something went wrong when trying to delete a floor'
+              text: 'Something went wrong when trying to delete a room'
             },
           })
         })

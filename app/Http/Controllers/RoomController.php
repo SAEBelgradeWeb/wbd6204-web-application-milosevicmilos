@@ -3,26 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
-use App\Repositories\FloorRepository;
-use Exception;
+use App\Repositories\RoomRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Exception;
 
-final class FloorController extends Controller
+final class RoomController extends Controller
 {
     /**
-     * @var FloorRepository
+     * @var RoomRepository
      */
-    private $floorRepository;
+    private $roomRepository;
 
     /**
-     * FloorController constructor.
-     * @param FloorRepository $floorRepository
+     * RoomController constructor.
+     * @param RoomRepository $roomRepository
      */
-    public function __construct(FloorRepository $floorRepository)
+    public function __construct(RoomRepository $roomRepository)
     {
-        $this->floorRepository = $floorRepository;
+        $this->roomRepository = $roomRepository;
     }
 
     /**
@@ -32,7 +32,7 @@ final class FloorController extends Controller
     public function index(Request $request): JsonResponse
     {
         return response()->json([
-            'floors' => $this->getFloors($request->user())
+            'rooms' => $this->getRooms($request->user())
         ]);
     }
 
@@ -43,14 +43,14 @@ final class FloorController extends Controller
      */
     public function show(Request $request, int $id): JsonResponse
     {
-        $floor = $this->floorRepository->get($id);
+        $room = $this->roomRepository->get($id);
 
-        if( ! $request->user()->can('manage', $floor)) {
-            throw new HttpException(404, 'That floor doesn\'t exist.');
+        if( ! $request->user()->can('manage', $room)) {
+            throw new HttpException(404, 'That room doesn\'t exist.');
         }
 
         return response()->json([
-            'floor' => $this->floorRepository->get($id)
+            'room' => $this->roomRepository->get($id)
         ]);
     }
 
@@ -63,13 +63,13 @@ final class FloorController extends Controller
      */
     public function destroy(Request $request, int $id): JsonResponse
     {
-        $floor = $this->floorRepository->get($id);
+        $room = $this->roomRepository->get($id);
 
-        if( ! $request->user()->can('manage', $floor)) {
+        if( ! $request->user()->can('manage', $room)) {
             throw new HttpException(404, 'That floor doesn\'t exist.');
         }
 
-        $this->floorRepository->delete($id);
+        $this->roomRepository->delete($id);
 
         return response()->json([], 204);
     }
@@ -78,16 +78,16 @@ final class FloorController extends Controller
      * @param User $user
      * @return array
      */
-    private function getFloors(User $user): array
+    private function getRooms(User $user): array
     {
         if ($user->hasRole(User::ROLE_ADMIN)) {
-            return $this->floorRepository
+            return $this->roomRepository
                 ->getAll()
                 ->toArray();
         }
 
-        return $this->floorRepository
-            ->getUserFloors($user->id)
+        return $this->roomRepository
+            ->getUserRooms($user->id)
             ->toArray();
     }
 }

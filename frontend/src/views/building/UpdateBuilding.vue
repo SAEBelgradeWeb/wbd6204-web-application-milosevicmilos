@@ -164,7 +164,7 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `Building "${result.data.building.name}" has been created`
+                  text: `Building "${result.data.building.name}" has been updated`
                 },
               })
 

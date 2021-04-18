@@ -1,16 +1,17 @@
 <template>
   <b-modal
-      id="update-floor-form"
+      id="create-room-form"
       cancel-variant="outline-secondary"
-      ok-title="Update"
+      ok-title="Create"
       cancel-title="Cancel"
       centered
-      title="Update Floor"
-      @show="getFloor"
+      title="Create Room"
+      @show="resetModal"
       @hidden="resetModal"
       @ok="handleOk"
   >
     <form
+        ref="form"
         @submit.stop.prevent="submitForm"
     >
       <validation-observer ref="formObserver">
@@ -26,9 +27,28 @@
             <v-select
                 id="buildingSelect"
                 name="building"
-                disabled
                 v-model="selectedBuilding"
                 :options="allBuildings"
+                @input="getFloors"
+            />
+            <small class="text-danger">{{ errors[0] }}</small>
+          </validation-provider>
+        </b-form-group>
+        <b-form-group
+            label="Select Floor"
+            label-for="floorSelect"
+        >
+          <validation-provider
+              #default="{ errors }"
+              name="Select Floor"
+              rules="required"
+          >
+            <v-select
+                id="floorSelect"
+                name="floor"
+                v-model="selectedFloor"
+                :disabled="floors_disabled === true"
+                :options="allFloors"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -52,19 +72,19 @@
           </validation-provider>
         </b-form-group>
         <b-form-group>
-          <label for="level">Level:</label>
+          <label for="size">Size:</label>
           <validation-provider
               #default="{ errors }"
-              name="Level"
+              name="Size"
               rules="required|integer"
           >
             <b-form-input
-                id="level"
-                name="level"
+                id="size"
+                name="size"
                 type="number"
-                v-model="levelValue"
+                v-model="sizeValue"
                 :state="errors.length > 0 ? false:null"
-                placeholder="Level"
+                placeholder="Size"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -100,13 +120,15 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  props: ['id', 'index'],
   data() {
     return {
       selectedBuilding: '',
       allBuildings: [],
+      selectedFloor: '',
+      allFloors: [],
+      floors_disabled: true,
       nameValue: '',
-      levelValue: '',
+      sizeValue: '',
       required,
       min,
       integer,
@@ -122,18 +144,24 @@ export default {
         })
   },
   methods: {
-    getFloor() {
-      this.$http.get('/floors/' + this.id)
+    getFloors() {
+      this.selectedFloor = '';
+      this.allFloors = [];
+      this.floors_disabled = false;
+
+      this.$http.get('/buildings/' + this.selectedBuilding.id + '/floors')
           .then(result => {
-            this.selectedBuilding = result.data.floor.building
-            this.nameValue = result.data.floor.name
-            this.levelValue = result.data.floor.level
+            this.allFloors = result.data.floors
           })
     },
     resetModal() {
       this.selectedBuilding = '';
+      this.selectedFloor = '';
       this.nameValue = '';
-      this.levelValue = '';
+      this.sizeValue = '';
+      this.selectedFloor = '';
+      this.allFloors = [];
+      this.floors_disabled = true;
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -144,15 +172,16 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.id;
-          this.$http.patch(url, {
-              'name': this.nameValue,
-              'level': this.levelValue,
+          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.selectedFloor.id + '/rooms';
+
+          this.$http.post(url, {
+            'floor_id': this.selectedFloor.id,
+            'name': this.nameValue,
+            'size': this.sizeValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.index].name = result.data.floor.name;
-              this.$parent.$options.parent.rows[this.index].level = result.data.floor.level;
-              this.$bvModal.hide('update-floor-form');
+              this.$parent.$options.parent.rows.push(result.data.room);
+              this.$bvModal.hide('create-room-form');
 
               this.$toast({
                 component: ToastificationContent,
@@ -160,7 +189,7 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `Floor "${result.data.floor.name}" has been updated`
+                  text: `Room "${result.data.room.name}" has been created`
                 },
               })
 
@@ -173,7 +202,7 @@ export default {
                   title: 'Error',
                   icon: 'XIcon',
                   variant: 'danger',
-                  text: 'Something went wrong when trying to update a floor'
+                  text: 'Something went wrong when trying to create a room'
                 },
               })
             })

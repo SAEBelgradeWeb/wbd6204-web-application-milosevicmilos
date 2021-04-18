@@ -18,7 +18,7 @@ let navigation = [
       },
       {
         title: 'Rooms',
-        route: 'rooms',
+        route: 'rooms-table',
       },
     ],
   },

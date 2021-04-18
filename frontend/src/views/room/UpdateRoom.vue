@@ -1,12 +1,12 @@
 <template>
   <b-modal
-      id="update-floor-form"
+      id="update-room-form"
       cancel-variant="outline-secondary"
       ok-title="Update"
       cancel-title="Cancel"
       centered
-      title="Update Floor"
-      @show="getFloor"
+      title="Update Room"
+      @show="getRoom"
       @hidden="resetModal"
       @ok="handleOk"
   >
@@ -33,6 +33,25 @@
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
         </b-form-group>
+        <b-form-group
+            label="Select Floor"
+            label-for="floorSelect"
+        >
+          <validation-provider
+              #default="{ errors }"
+              name="Select Floor"
+              rules="required"
+          >
+            <v-select
+                id="floorSelect"
+                name="floor"
+                disabled=""
+                v-model="selectedFloor"
+                :options="allFloors"
+            />
+            <small class="text-danger">{{ errors[0] }}</small>
+          </validation-provider>
+        </b-form-group>
         <b-form-group>
           <label for="name">Name:</label>
           <validation-provider
@@ -52,19 +71,19 @@
           </validation-provider>
         </b-form-group>
         <b-form-group>
-          <label for="level">Level:</label>
+          <label for="size">Size:</label>
           <validation-provider
               #default="{ errors }"
-              name="Level"
+              name="Size"
               rules="required|integer"
           >
             <b-form-input
-                id="level"
-                name="level"
+                id="size"
+                name="size"
                 type="number"
-                v-model="levelValue"
+                v-model="sizeValue"
                 :state="errors.length > 0 ? false:null"
-                placeholder="Level"
+                placeholder="Size"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -105,8 +124,11 @@ export default {
     return {
       selectedBuilding: '',
       allBuildings: [],
+      selectedFloor: '',
+      allFloors: [],
+      floors_disabled: true,
       nameValue: '',
-      levelValue: '',
+      sizeValue: '',
       required,
       min,
       integer,
@@ -122,18 +144,23 @@ export default {
         })
   },
   methods: {
-    getFloor() {
-      this.$http.get('/floors/' + this.id)
+    getRoom() {
+      this.$http.get('/rooms/' + this.id)
           .then(result => {
-            this.selectedBuilding = result.data.floor.building
-            this.nameValue = result.data.floor.name
-            this.levelValue = result.data.floor.level
+            this.selectedBuilding = result.data.room.floor.building
+            this.selectedFloor = result.data.room.floor
+            this.nameValue = result.data.room.name
+            this.sizeValue = result.data.room.size
           })
     },
     resetModal() {
       this.selectedBuilding = '';
+      this.selectedFloor = '';
       this.nameValue = '';
-      this.levelValue = '';
+      this.sizeValue = '';
+      this.selectedFloor = '';
+      this.allFloors = [];
+      this.floors_disabled = true;
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -144,15 +171,15 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.id;
+          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.selectedFloor.id + '/rooms/' + this.id;
           this.$http.patch(url, {
               'name': this.nameValue,
-              'level': this.levelValue,
+              'size': this.sizeValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.index].name = result.data.floor.name;
-              this.$parent.$options.parent.rows[this.index].level = result.data.floor.level;
-              this.$bvModal.hide('update-floor-form');
+              this.$parent.$options.parent.rows[this.index].name = result.data.room.name;
+              this.$parent.$options.parent.rows[this.index].size = result.data.room.size;
+              this.$bvModal.hide('update-room-form');
 
               this.$toast({
                 component: ToastificationContent,
@@ -160,7 +187,7 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `Floor "${result.data.floor.name}" has been updated`
+                  text: `Room "${result.data.room.name}" has been updated`
                 },
               })
 

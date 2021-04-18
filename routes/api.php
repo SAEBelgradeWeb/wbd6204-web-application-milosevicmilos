@@ -7,6 +7,7 @@ use App\Http\Controllers\BuildingController;
 use App\Http\Controllers\BuildingFloorController;
 use App\Http\Controllers\BuildingFloorRoomController;
 use App\Http\Controllers\FloorController;
+use App\Http\Controllers\RoomController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -26,11 +27,14 @@ use Illuminate\Support\Facades\Route;
 Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
     Route::resource('users', UserController::class)->except('put', 'create', 'edit');
     Route::resource('buildings', BuildingController::class)->except('put', 'create', 'edit');
+    Route::resource('buildings.floors', BuildingFloorController::class)->except('put', 'create', 'edit');
     Route::get('floors', [FloorController::class, 'index'])->name('floors.index');
     Route::get('floors/{floor}', [FloorController::class, 'show'])->name('floors.show');
     Route::delete('floors/{floor}', [FloorController::class, 'destroy'])->name('floors.destroy');
-    Route::resource('buildings.floors', BuildingFloorController::class)->except('put', 'create', 'edit');
     Route::resource('buildings.floors.rooms', BuildingFloorRoomController::class)->except('put', 'create', 'edit');
+    Route::get('rooms', [RoomController::class, 'index'])->name('rooms.index');
+    Route::get('rooms/{room}', [RoomController::class, 'show'])->name('rooms.show');
+    Route::delete('rooms/{room}', [RoomController::class, 'destroy'])->name('rooms.destroy');
     Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');

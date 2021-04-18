@@ -53,6 +53,23 @@ let routes = [
     },
   },
   {
+    path: '/rooms',
+    name: 'rooms-table',
+    component: () => import('@/views/room/RoomTable.vue'),
+    meta: {
+      pageTitle: 'Rooms Table',
+      breadcrumb: [
+        {
+          text: 'Table',
+        },
+        {
+          text: 'Rooms Table',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/error/Error404.vue'),
