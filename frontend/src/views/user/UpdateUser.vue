@@ -164,7 +164,7 @@ export default {
                   title: 'Error',
                   icon: 'XIcon',
                   variant: 'danger',
-                  text: 'Something went wrong when trying to create a user'
+                  text: 'Something went wrong when trying to update a user'
                 },
               })
             })

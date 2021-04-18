@@ -30,11 +30,24 @@ final class Floor extends Model
     protected $visible = [
         'id',
         'building_id',
+        'building_name',
         'name',
         'level',
         'rooms',
+        'room_count',
         'created_at',
         'updated_at',
+        'building'
+    ];
+
+    /**
+     * The accessors to append to the model's array form.
+     *
+     * @var array
+     */
+    protected $appends = [
+        'building_name',
+        'room_count',
     ];
 
     /**
@@ -51,5 +64,21 @@ final class Floor extends Model
     public function rooms(): HasMany
     {
         return $this->hasMany(Room::class);
+    }
+
+    /**
+     * @return string
+     */
+    public function getBuildingNameAttribute(): string
+    {
+        return $this->building->name;
+    }
+
+    /**
+     * @return int
+     */
+    public function getRoomCountAttribute(): int
+    {
+        return $this->rooms()->count();
     }
 }

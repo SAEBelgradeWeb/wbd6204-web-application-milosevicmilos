@@ -16,8 +16,6 @@ let routes = [
           active: true,
         },
       ],
-      action: 'read',
-      subject: 'Auth',
     },
   },
   {
@@ -35,8 +33,23 @@ let routes = [
           active: true,
         },
       ],
-      action: "manage",
-      subject: "all"
+    },
+  },
+  {
+    path: '/floors',
+    name: 'floors-table',
+    component: () => import('@/views/floor/FloorTable.vue'),
+    meta: {
+      pageTitle: 'Floors Table',
+      breadcrumb: [
+        {
+          text: 'Table',
+        },
+        {
+          text: 'Floors Table',
+          active: true,
+        },
+      ],
     },
   },
   {

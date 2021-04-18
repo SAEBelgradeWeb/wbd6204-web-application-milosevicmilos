@@ -37,7 +37,7 @@ final class BuildingFloorRoomController extends Controller
         $building = $this->buildingRepository->get($buildingId);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         return response()->json([
@@ -57,7 +57,7 @@ final class BuildingFloorRoomController extends Controller
         $building = $this->buildingRepository->get($buildingId);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         return response()->json([
@@ -76,7 +76,7 @@ final class BuildingFloorRoomController extends Controller
         $building = $this->buildingRepository->get($buildingId);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         return response()->json([
@@ -96,7 +96,7 @@ final class BuildingFloorRoomController extends Controller
         $building = $this->buildingRepository->get($buildingId);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         return response()->json([
@@ -117,7 +117,7 @@ final class BuildingFloorRoomController extends Controller
         $building = $this->buildingRepository->get($buildingId);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         $this->buildingRepository->deleteBuildingFloorRoom($buildingId, $floorId, $id);

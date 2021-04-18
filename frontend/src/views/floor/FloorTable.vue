@@ -9,9 +9,9 @@
             <b-col md="4">
               <b-button
                   variant="primary"
-                  v-b-modal.create-building-form
+                  v-b-modal.create-floor-form
               >
-                Create Building
+                Create Floor
               </b-button>
 
             </b-col>
@@ -69,14 +69,14 @@
                       class="text-body align-middle mr-25"
                     />
                   </template>
-                  <b-dropdown-item v-b-modal.update-building-form @click="update(props.row)">
+                  <b-dropdown-item v-b-modal.update-level-form @click="update(props.row)">
                     <feather-icon
                       icon="Edit2Icon"
                       class="mr-50"
                     />
                     <span>Edit</span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="deleteBuilding(props.row)">
+                  <b-dropdown-item @click="deleteFloor(props.row)">
                     <feather-icon
                       icon="TrashIcon"
                       class="mr-50"
@@ -141,8 +141,8 @@
             </div>
           </template>
         </vue-good-table>
-        <create-building></create-building>
-        <update-building v-bind:id="this.id" v-bind:index="this.index"></update-building>
+        <create-floor></create-floor>
+        <update-floor v-bind:id="this.id" v-bind:index="this.index"></update-floor>
       </b-card-code>
     </b-col>
   </b-row>
@@ -156,8 +156,8 @@ import {
 import { VueGoodTable } from 'vue-good-table'
 import store from '@/store'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-import CreateBuilding from './CreateBuilding.vue'
-import UpdateBuilding from './UpdateBuilding.vue'
+import CreateFloor from './CreateFloor.vue'
+import UpdateFloor from './UpdateFloor.vue'
 
 export default {
   components: {
@@ -175,8 +175,8 @@ export default {
     BDropdownItem,
     ToastificationContent,
     BButton,
-    CreateBuilding,
-    UpdateBuilding,
+    CreateFloor,
+    UpdateFloor,
   },
   data() {
     return {
@@ -202,27 +202,27 @@ export default {
     },
   },
   created() {
-    let columns = [
+    this.columns = [
       {
         label: 'ID',
         field: 'id',
         sortable: false,
       },
       {
+        label: 'Building Name',
+        field: 'building_name',
+      },
+      {
         label: 'Name',
         field: 'name',
       },
       {
-        label: 'Address',
-        field: 'address',
+        label: 'Room Count',
+        field: 'room_count',
       },
       {
-        label: 'Floor count',
-        field: 'floor_count',
-      },
-      {
-        label: 'Created',
-        field: 'created_at',
+        label: 'Level',
+        field: 'level',
       },
       {
         label: 'Action',
@@ -231,18 +231,9 @@ export default {
       },
     ];
 
-    if (localStorage.getItem('userRole') === 'ADMIN') {
-      columns.splice(1, 0, {
-        label: 'User',
-        field: 'user_name',
-      });
-    }
-
-    this.columns = columns;
-
-    this.$http.get('/buildings')
+    this.$http.get('/floors')
       .then(result => {
-        this.rows = result.data.buildings
+        this.rows = result.data.floors
       })
   },
   methods: {
@@ -250,9 +241,9 @@ export default {
       this.id = row.id;
       this.index = row.originalIndex;
     },
-    deleteBuilding(row) {
+    deleteFloor(row) {
       // TODO: Add confirm box!
-      this.$http.delete('/buildings/' + row.id)
+      this.$http.delete('/floors/' + row.id)
         .then(res => {
           this.rows.splice(row.originalIndex, 1);
           this.$toast({
@@ -261,7 +252,7 @@ export default {
               title: 'Success',
               icon: 'CheckIcon',
               variant: 'success',
-              text: `Building "${row.name}" has been deleted`
+              text: `Floor "${row.name}" has been deleted`
             },
           })
         })
@@ -273,7 +264,7 @@ export default {
               title: 'Error',
               icon: 'XIcon',
               variant: 'danger',
-              text: 'Something went wrong when trying to delete a building'
+              text: 'Something went wrong when trying to delete a floor'
             },
           })
         })

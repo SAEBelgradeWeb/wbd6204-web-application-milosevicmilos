@@ -4,9 +4,11 @@ namespace App\Providers;
 
 use App\Models\Appliance;
 use App\Models\Building;
+use App\Models\Floor;
 use App\Models\Room;
 use App\Models\User;
 use App\Policies\AppliancePolicy;
+use App\Policies\FloorPolicy;
 use App\Policies\RoomPolicy;
 use App\Policies\UserPolicy;
 use App\Policies\BuildingPolicy;
@@ -23,6 +25,7 @@ final class AuthServiceProvider extends ServiceProvider
         User::class => UserPolicy::class,
         Building::class => BuildingPolicy::class,
         Appliance::class => AppliancePolicy::class,
+        Floor::class => FloorPolicy::class,
         Room::class => RoomPolicy::class,
     ];
 

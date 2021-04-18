@@ -48,7 +48,7 @@ final class BuildingController extends Controller
         $building = $this->buildingRepository->get($id);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         return response()->json(['building' => $building]);
@@ -90,7 +90,7 @@ final class BuildingController extends Controller
         $building = $this->buildingRepository->get($id);
 
         if( ! $request->user()->can('manage', $building)) {
-            throw new HttpException(404, 'That building doesn\'t have exist.');
+            throw new HttpException(404, 'That building doesn\'t exist.');
         }
 
         $this->buildingRepository->delete($id);

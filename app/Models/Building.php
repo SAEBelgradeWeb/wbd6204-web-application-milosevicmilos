@@ -32,11 +32,14 @@ final class Building extends Model
      */
     protected $visible = [
         'id',
+        'value',
         'user_id',
         'user_name',
         'name',
+        'label',
         'address',
         'floors',
+        'floor_count',
         'user',
         'created_at',
         'updated_at',
@@ -49,6 +52,9 @@ final class Building extends Model
      */
     protected $appends = [
         'user_name',
+        'floor_count',
+        'value',
+        'label',
     ];
 
     /**
@@ -77,8 +83,35 @@ final class Building extends Model
         return $this->hasMany(Floor::class);
     }
 
+    /**
+     * @return string
+     */
     public function getUserNameAttribute(): string
     {
         return $this->user->getName();
+    }
+
+    /**
+     * @return int
+     */
+    public function getFloorCountAttribute(): int
+    {
+        return $this->floors()->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueAttribute(): string
+    {
+        return $this->id;
     }
 }

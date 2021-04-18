@@ -1,35 +1,34 @@
 <template>
   <b-modal
-      id="update-building-form"
+      id="create-floor-form"
       cancel-variant="outline-secondary"
-      ok-title="Update"
+      ok-title="Create"
       cancel-title="Cancel"
       centered
-      title="Update Building"
-      @show="getBuilding"
+      title="Create Floor"
+      @show="resetModal"
       @hidden="resetModal"
       @ok="handleOk"
   >
     <form
+        ref="form"
         @submit.stop.prevent="submitForm"
     >
       <validation-observer ref="formObserver">
         <b-form-group
-            label="Select User"
-            label-for="userSelect"
-            v-if="this.userRole === 'ADMIN'"
+            label="Select Building"
+            label-for="buildingSelect"
         >
           <validation-provider
               #default="{ errors }"
-              name="Select User"
+              name="Select Building"
               rules="required"
           >
             <v-select
-                id="userSelect"
-                name="user"
-                disabled
-                v-model="selectedUser"
-                :options="allUsers"
+                id="buildingSelect"
+                name="building"
+                v-model="selectedBuilding"
+                :options="allBuildings"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -38,7 +37,7 @@
           <label for="name">Name:</label>
           <validation-provider
               #default="{ errors }"
-              name="Name"
+              name="name"
               rules="required|min:3"
           >
             <b-form-input
@@ -53,19 +52,19 @@
           </validation-provider>
         </b-form-group>
         <b-form-group>
-          <label for="address">Address:</label>
+          <label for="level">Level:</label>
           <validation-provider
               #default="{ errors }"
-              name="address"
-              rules="required|min:3"
+              name="Level"
+              rules="required|integer"
           >
             <b-form-input
-                id="address"
-                name="address"
-                type="text"
-                v-model="addressValue"
+                id="level"
+                name="level"
+                type="number"
+                v-model="levelValue"
                 :state="errors.length > 0 ? false:null"
-                placeholder="Address"
+                placeholder="Level"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -82,7 +81,7 @@ import {
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 import {
-  required, min
+  required, min, integer
 } from '@validations'
 import vSelect from "vue-select";
 
@@ -101,44 +100,31 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  props: ['id', 'index'],
   data() {
     return {
-      allUsers: [],
-      selectedUser: '',
+      selectedBuilding: '',
+      allBuildings: [],
       nameValue: '',
-      addressValue: '',
-      userRole: '',
+      levelValue: '',
       required,
       min,
+      integer,
     }
   },
   directives: {
     'b-modal': VBModal,
   },
   created() {
-    this.userRole = localStorage.getItem('userRole');
-
-    if (this.userRole === 'ADMIN') {
-      this.$http.get('/users')
-          .then(result => {
-            this.allUsers = result.data.users
-          })
-    }
+    this.$http.get('/buildings')
+        .then(result => {
+          this.allBuildings = result.data.buildings
+        })
   },
   methods: {
-    getBuilding() {
-      this.$http.get('/buildings/' + this.id)
-          .then(result => {
-            this.selectedUser = result.data.building.user
-            this.nameValue = result.data.building.name
-            this.addressValue = result.data.building.address
-          })
-    },
     resetModal() {
-      this.selectedUser = '';
+      this.selectedBuilding = '';
       this.nameValue = '';
-      this.addressValue = '';
+      this.levelValue = '';
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -149,14 +135,16 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          this.$http.patch('/buildings/' + this.id, {
-              'name': this.nameValue,
-              'address': this.addressValue,
+          let url = '/buildings/' + this.selectedBuilding.id + '/floors/';
+
+          this.$http.post(url, {
+            'user_id': this.selectedBuilding.id,
+            'name': this.nameValue,
+            'level': this.levelValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.index].name = result.data.building.name;
-              this.$parent.$options.parent.rows[this.index].address = result.data.building.address;
-              this.$bvModal.hide('update-building-form');
+              this.$parent.$options.parent.rows.push(result.data.floor);
+              this.$bvModal.hide('create-floor-form');
 
               this.$toast({
                 component: ToastificationContent,
@@ -164,7 +152,7 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `Building "${result.data.building.name}" has been created`
+                  text: `Floor "${result.data.floor.name}" has been created`
                 },
               })
 
@@ -177,7 +165,7 @@ export default {
                   title: 'Error',
                   icon: 'XIcon',
                   variant: 'danger',
-                  text: 'Something went wrong when trying to update a building'
+                  text: 'Something went wrong when trying to create a floor'
                 },
               })
             })
