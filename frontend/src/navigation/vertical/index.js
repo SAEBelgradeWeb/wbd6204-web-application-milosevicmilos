@@ -24,7 +24,7 @@ let navigation = [
   },
   {
     title: 'Appliances',
-    route: 'appliances',
+    route: 'appliances-table',
     icon: 'BatteryChargingIcon',
   },
 ];

@@ -101,7 +101,7 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  props: ['id', 'index'],
+  props: ['building'],
   data() {
     return {
       allUsers: [],
@@ -128,7 +128,7 @@ export default {
   },
   methods: {
     getBuilding() {
-      this.$http.get('/buildings/' + this.id)
+      this.$http.get('/buildings/' + this.building.id)
           .then(result => {
             this.selectedUser = result.data.building.user
             this.nameValue = result.data.building.name
@@ -149,13 +149,13 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          this.$http.patch('/buildings/' + this.id, {
+          this.$http.patch('/buildings/' + this.building.id, {
               'name': this.nameValue,
               'address': this.addressValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.index].name = result.data.building.name;
-              this.$parent.$options.parent.rows[this.index].address = result.data.building.address;
+              this.$parent.$options.parent.rows[this.building.originalIndex].name = result.data.building.name;
+              this.$parent.$options.parent.rows[this.building.originalIndex].address = result.data.building.address;
               this.$bvModal.hide('update-building-form');
 
               this.$toast({

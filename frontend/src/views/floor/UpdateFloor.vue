@@ -100,7 +100,7 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  props: ['id', 'index'],
+  props: ['floor'],
   data() {
     return {
       selectedBuilding: '',
@@ -123,7 +123,7 @@ export default {
   },
   methods: {
     getFloor() {
-      this.$http.get('/floors/' + this.id)
+      this.$http.get('/buildings/' + this.floor.building.id + '/floors/' + this.floor.id)
           .then(result => {
             this.selectedBuilding = result.data.floor.building
             this.nameValue = result.data.floor.name
@@ -144,14 +144,14 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.id;
+          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.floor.id;
           this.$http.patch(url, {
               'name': this.nameValue,
               'level': this.levelValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.index].name = result.data.floor.name;
-              this.$parent.$options.parent.rows[this.index].level = result.data.floor.level;
+              this.$parent.$options.parent.rows[this.floor.originalIndex].name = result.data.floor.name;
+              this.$parent.$options.parent.rows[this.floor.originalIndex].level = result.data.floor.level;
               this.$bvModal.hide('update-floor-form');
 
               this.$toast({
@@ -166,7 +166,6 @@ export default {
 
             })
             .catch(error => {
-              console.log('Error ' + error);
               this.$toast({
                 component: ToastificationContent,
                 props: {

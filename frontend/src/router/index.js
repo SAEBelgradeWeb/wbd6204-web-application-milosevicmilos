@@ -70,6 +70,23 @@ let routes = [
     },
   },
   {
+    path: '/appliances',
+    name: 'appliances-table',
+    component: () => import('@/views/appliance/ApplianceTable.vue'),
+    meta: {
+      pageTitle: 'Appliances Table',
+      breadcrumb: [
+        {
+          text: 'Table',
+        },
+        {
+          text: 'Appliances Table',
+          active: true,
+        },
+      ],
+    },
+  },
+  {
     path: '/error-404',
     name: 'error-404',
     component: () => import('@/views/error/Error404.vue'),

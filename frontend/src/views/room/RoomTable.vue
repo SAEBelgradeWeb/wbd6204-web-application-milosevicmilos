@@ -34,7 +34,6 @@
         <vue-good-table
           :columns="columns"
           :rows="rows"
-          :rtl="direction"
           :search-options="{
             enabled: true,
             externalQuery: searchTerm }"
@@ -142,7 +141,7 @@
           </template>
         </vue-good-table>
         <create-room></create-room>
-        <update-room v-bind:id="this.id" v-bind:index="this.index"></update-room>
+        <update-room v-bind:room="this.room"></update-room>
       </b-card-code>
     </b-col>
   </b-row>
@@ -181,25 +180,11 @@ export default {
   data() {
     return {
       pageLength: 5,
-      dir: false,
       columns: this.columns,
       rows: [],
-      id: 0,
-      index: 0,
+      room: null,
       searchTerm: '',
     }
-  },
-  computed: {
-    direction() {
-      if (store.state.appConfig.isRTL) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.dir = true
-        return this.dir
-      }
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.dir = false
-      return this.dir
-    },
   },
   created() {
     this.columns = [
@@ -210,11 +195,11 @@ export default {
       },
       {
         label: 'Building Name',
-        field: 'building_name',
+        field: 'floor.building.name',
       },
       {
         label: 'Floor Name',
-        field: 'floor_name',
+        field: 'floor.name',
       },
       {
         label: 'Name',
@@ -242,12 +227,11 @@ export default {
   },
   methods: {
     update(row) {
-      this.id = row.id;
-      this.index = row.originalIndex;
+      this.room = row;
     },
     deleteRoom(row) {
       // TODO: Add confirm box!
-      this.$http.delete('/rooms/' + row.id)
+      this.$http.delete('/buildings/' + row.floor.building.id + '/floors/' + row.floor.id + '/rooms/' + row.id)
         .then(res => {
           this.rows.splice(row.originalIndex, 1);
           this.$toast({
@@ -261,7 +245,6 @@ export default {
           })
         })
         .catch(error => {
-          console.log(error);
           this.$toast({
             component: ToastificationContent,
             props: {

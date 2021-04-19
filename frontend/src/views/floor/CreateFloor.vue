@@ -138,7 +138,7 @@ export default {
           let url = '/buildings/' + this.selectedBuilding.id + '/floors/';
 
           this.$http.post(url, {
-            'user_id': this.selectedBuilding.id,
+            'building_id': this.selectedBuilding.id,
             'name': this.nameValue,
             'level': this.levelValue,
           })
@@ -158,7 +158,6 @@ export default {
 
             })
             .catch(error => {
-              console.log('Error ' + error);
               this.$toast({
                 component: ToastificationContent,
                 props: {

@@ -37,44 +37,6 @@ final class RoomController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function show(Request $request, int $id): JsonResponse
-    {
-        $room = $this->roomRepository->get($id);
-
-        if( ! $request->user()->can('manage', $room)) {
-            throw new HttpException(404, 'That room doesn\'t exist.');
-        }
-
-        return response()->json([
-            'room' => $this->roomRepository->get($id)
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws HttpException
-     * @throws Exception
-     */
-    public function destroy(Request $request, int $id): JsonResponse
-    {
-        $room = $this->roomRepository->get($id);
-
-        if( ! $request->user()->can('manage', $room)) {
-            throw new HttpException(404, 'That floor doesn\'t exist.');
-        }
-
-        $this->roomRepository->delete($id);
-
-        return response()->json([], 204);
-    }
-
-    /**
      * @param User $user
      * @return array
      */

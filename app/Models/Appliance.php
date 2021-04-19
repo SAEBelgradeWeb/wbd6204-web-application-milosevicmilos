@@ -34,6 +34,17 @@ final class Appliance extends Model
         'created_at',
         'updated_at',
         'applianceType',
+        'room',
+    ];
+
+    /**
+     * The attributes that should be cast to native types.
+     *
+     * @var array
+     */
+    protected $casts = [
+        'created_at' => 'date:d M Y H:i',
+        'updated_at' => 'date:d M Y H:i',
     ];
 
     /**

@@ -39,18 +39,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -78,18 +86,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -116,18 +132,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -152,18 +176,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -191,18 +223,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -231,18 +271,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);
@@ -272,18 +320,26 @@ final class ApplianceFilterTest extends APITest
             ->assertJsonStructure([
                 'appliances' => [
                     '*' => [
-                        'appliance_id',
-                        'appliance_name',
-                        'appliance_type_name',
+                        'id',
+                        'name',
+                        'appliance_type_id',
                         'room_id',
-                        'room_name',
-                        'floor_id',
-                        'floor_name',
-                        'building_id',
-                        'building_name',
-                        'user_id',
-                        'user_first_name',
-                        'user_last_name'
+                        'room' => [
+                            'id',
+                            'name',
+                            'size',
+                            'floor' => [
+                                'id',
+                                'name',
+                                'level',
+                                'building' => [
+                                    'id',
+                                    'name',
+                                    'user_name',
+                                ]
+                            ]
+                        ],
+                        'appliance_type',
                     ]
                 ]
             ]);

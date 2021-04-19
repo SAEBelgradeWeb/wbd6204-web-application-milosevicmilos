@@ -1,12 +1,12 @@
 <template>
   <b-modal
-      id="update-room-form"
+      id="update-building-form"
       cancel-variant="outline-secondary"
       ok-title="Update"
       cancel-title="Cancel"
       centered
-      title="Update Room"
-      @show="getRoom"
+      title="Update Building"
+      @show="getBuilding"
       @hidden="resetModal"
       @ok="handleOk"
   >
@@ -15,39 +15,21 @@
     >
       <validation-observer ref="formObserver">
         <b-form-group
-            label="Select Building"
-            label-for="buildingSelect"
+            label="Select User"
+            label-for="userSelect"
+            v-if="this.userRole === 'ADMIN'"
         >
           <validation-provider
               #default="{ errors }"
-              name="Select Building"
+              name="Select User"
               rules="required"
           >
             <v-select
-                id="buildingSelect"
-                name="building"
+                id="userSelect"
+                name="user"
                 disabled
-                v-model="selectedBuilding"
-                :options="allBuildings"
-            />
-            <small class="text-danger">{{ errors[0] }}</small>
-          </validation-provider>
-        </b-form-group>
-        <b-form-group
-            label="Select Floor"
-            label-for="floorSelect"
-        >
-          <validation-provider
-              #default="{ errors }"
-              name="Select Floor"
-              rules="required"
-          >
-            <v-select
-                id="floorSelect"
-                name="floor"
-                disabled=""
-                v-model="selectedFloor"
-                :options="allFloors"
+                v-model="selectedUser"
+                :options="allUsers"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -56,7 +38,7 @@
           <label for="name">Name:</label>
           <validation-provider
               #default="{ errors }"
-              name="name"
+              name="Name"
               rules="required|min:3"
           >
             <b-form-input
@@ -71,19 +53,19 @@
           </validation-provider>
         </b-form-group>
         <b-form-group>
-          <label for="size">Size:</label>
+          <label for="address">Address:</label>
           <validation-provider
               #default="{ errors }"
-              name="Size"
-              rules="required|integer"
+              name="address"
+              rules="required|min:3"
           >
             <b-form-input
-                id="size"
-                name="size"
-                type="number"
-                v-model="sizeValue"
+                id="address"
+                name="address"
+                type="text"
+                v-model="addressValue"
                 :state="errors.length > 0 ? false:null"
-                placeholder="Size"
+                placeholder="Address"
             />
             <small class="text-danger">{{ errors[0] }}</small>
           </validation-provider>
@@ -100,7 +82,7 @@ import {
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import {ValidationObserver, ValidationProvider} from 'vee-validate'
 import {
-  required, min, integer
+  required, min
 } from '@validations'
 import vSelect from "vue-select";
 
@@ -119,48 +101,44 @@ export default {
     ValidationProvider,
     ValidationObserver,
   },
-  props: ['room'],
+  props: ['id', 'index'],
   data() {
     return {
-      selectedBuilding: '',
-      allBuildings: [],
-      selectedFloor: '',
-      allFloors: [],
-      floors_disabled: true,
+      allUsers: [],
+      selectedUser: '',
       nameValue: '',
-      sizeValue: '',
+      addressValue: '',
+      userRole: '',
       required,
       min,
-      integer,
     }
   },
   directives: {
     'b-modal': VBModal,
   },
   created() {
-    this.$http.get('/buildings')
-        .then(result => {
-          this.allBuildings = result.data.buildings
-        })
+    this.userRole = localStorage.getItem('userRole');
+
+    if (this.userRole === 'ADMIN') {
+      this.$http.get('/users')
+          .then(result => {
+            this.allUsers = result.data.users
+          })
+    }
   },
   methods: {
-    getRoom() {
-      this.$http.get( '/buildings/' + this.room.floor.building.id + '/floors/' + this.room.floor.id + '/rooms/' + this.room.id)
+    getBuilding() {
+      this.$http.get('/buildings/' + this.id)
           .then(result => {
-            this.selectedBuilding = result.data.room.floor.building
-            this.selectedFloor = result.data.room.floor
-            this.nameValue = result.data.room.name
-            this.sizeValue = result.data.room.size
+            this.selectedUser = result.data.building.user
+            this.nameValue = result.data.building.name
+            this.addressValue = result.data.building.address
           })
     },
     resetModal() {
-      this.selectedBuilding = '';
-      this.selectedFloor = '';
+      this.selectedUser = '';
       this.nameValue = '';
-      this.sizeValue = '';
-      this.selectedFloor = '';
-      this.allFloors = [];
-      this.floors_disabled = true;
+      this.addressValue = '';
     },
     handleOk(bvModalEvt) {
       // Prevent modal from closing
@@ -171,15 +149,14 @@ export default {
     submitForm() {
       this.$refs.formObserver.validate().then(success => {
         if (success) {
-          let url = '/buildings/' + this.selectedBuilding.id + '/floors/' + this.selectedFloor.id + '/rooms/' + this.room.id;
-          this.$http.patch(url, {
+          this.$http.patch('/buildings/' + this.id, {
               'name': this.nameValue,
-              'size': this.sizeValue,
+              'address': this.addressValue,
           })
             .then(result => {
-              this.$parent.$options.parent.rows[this.room.originalIndex].name = result.data.room.name;
-              this.$parent.$options.parent.rows[this.room.originalIndex].size = result.data.room.size;
-              this.$bvModal.hide('update-room-form');
+              this.$parent.$options.parent.rows[this.index].name = result.data.building.name;
+              this.$parent.$options.parent.rows[this.index].address = result.data.building.address;
+              this.$bvModal.hide('update-building-form');
 
               this.$toast({
                 component: ToastificationContent,
@@ -187,19 +164,20 @@ export default {
                   title: 'Success',
                   icon: 'CheckIcon',
                   variant: 'success',
-                  text: `Room "${result.data.room.name}" has been updated`
+                  text: `Building "${result.data.building.name}" has been updated`
                 },
               })
 
             })
             .catch(error => {
+              console.log('Error ' + error);
               this.$toast({
                 component: ToastificationContent,
                 props: {
                   title: 'Error',
                   icon: 'XIcon',
                   variant: 'danger',
-                  text: 'Something went wrong when trying to update a floor'
+                  text: 'Something went wrong when trying to update a building'
                 },
               })
             })

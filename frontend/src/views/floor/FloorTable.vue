@@ -34,7 +34,6 @@
         <vue-good-table
           :columns="columns"
           :rows="rows"
-          :rtl="direction"
           :search-options="{
             enabled: true,
             externalQuery: searchTerm }"
@@ -142,7 +141,7 @@
           </template>
         </vue-good-table>
         <create-floor></create-floor>
-        <update-floor v-bind:id="this.id" v-bind:index="this.index"></update-floor>
+        <update-floor v-bind:floor="this.floor"></update-floor>
       </b-card-code>
     </b-col>
   </b-row>
@@ -154,7 +153,6 @@ import {
   BRow, BCol, BBadge, BPagination, BForm, BFormGroup, BFormInput, BFormSelect, BDropdown, BDropdownItem, BButton
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
-import store from '@/store'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
 import CreateFloor from './CreateFloor.vue'
 import UpdateFloor from './UpdateFloor.vue'
@@ -181,25 +179,11 @@ export default {
   data() {
     return {
       pageLength: 5,
-      dir: false,
       columns: this.columns,
       rows: [],
-      id: 0,
-      index: 0,
+      floor: null,
       searchTerm: '',
     }
-  },
-  computed: {
-    direction() {
-      if (store.state.appConfig.isRTL) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.dir = true
-        return this.dir
-      }
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.dir = false
-      return this.dir
-    },
   },
   created() {
     this.columns = [
@@ -210,7 +194,7 @@ export default {
       },
       {
         label: 'Building Name',
-        field: 'building_name',
+        field: 'building.name',
       },
       {
         label: 'Name',
@@ -238,12 +222,11 @@ export default {
   },
   methods: {
     update(row) {
-      this.id = row.id;
-      this.index = row.originalIndex;
+      this.floor = row;
     },
     deleteFloor(row) {
       // TODO: Add confirm box!
-      this.$http.delete('/floors/' + row.id)
+      this.$http.delete('/buildings/' + row.building.id +'/floors/' + row.id)
         .then(res => {
           this.rows.splice(row.originalIndex, 1);
           this.$toast({
@@ -257,7 +240,6 @@ export default {
           })
         })
         .catch(error => {
-          console.log(error);
           this.$toast({
             component: ToastificationContent,
             props: {

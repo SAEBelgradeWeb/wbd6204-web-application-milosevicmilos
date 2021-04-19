@@ -141,7 +141,7 @@
           </template>
         </vue-good-table>
         <create-building></create-building>
-        <update-building v-bind:building="this.building"></update-building>
+        <update-building v-bind:id="this.id" v-bind:index="this.index"></update-building>
       </b-card-code>
     </b-col>
   </b-row>
@@ -179,9 +179,11 @@ export default {
   data() {
     return {
       pageLength: 5,
+      dir: false,
       columns: this.columns,
       rows: [],
-      building: null,
+      id: 0,
+      index: 0,
       searchTerm: '',
     }
   },
@@ -197,12 +199,12 @@ export default {
         field: 'name',
       },
       {
-        label: 'Address',
-        field: 'address',
+        label: 'Type',
+        field: 'appliance_type.name',
       },
       {
-        label: 'Floor count',
-        field: 'floor_count',
+        label: 'Room',
+        field: 'room.name',
       },
       {
         label: 'Created',
@@ -218,20 +220,21 @@ export default {
     if (localStorage.getItem('userRole') === 'ADMIN') {
       columns.splice(1, 0, {
         label: 'User',
-        field: 'user_name',
+        field: 'room.floor.building.user_name',
       });
     }
 
     this.columns = columns;
 
-    this.$http.get('/buildings')
+    this.$http.get('/appliances')
       .then(result => {
-        this.rows = result.data.buildings
+        this.rows = result.data.appliances
       })
   },
   methods: {
     update(row) {
-      this.building = row;
+      this.id = row.id;
+      this.index = row.originalIndex;
     },
     deleteBuilding(row) {
       // TODO: Add confirm box!

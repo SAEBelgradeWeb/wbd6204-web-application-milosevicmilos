@@ -37,44 +37,6 @@ final class FloorController extends Controller
     }
 
     /**
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     */
-    public function show(Request $request, int $id): JsonResponse
-    {
-        $floor = $this->floorRepository->get($id);
-
-        if( ! $request->user()->can('manage', $floor)) {
-            throw new HttpException(404, 'That floor doesn\'t exist.');
-        }
-
-        return response()->json([
-            'floor' => $this->floorRepository->get($id)
-        ]);
-    }
-
-    /**
-     * @param Request $request
-     * @param int $id
-     * @return JsonResponse
-     * @throws HttpException
-     * @throws Exception
-     */
-    public function destroy(Request $request, int $id): JsonResponse
-    {
-        $floor = $this->floorRepository->get($id);
-
-        if( ! $request->user()->can('manage', $floor)) {
-            throw new HttpException(404, 'That floor doesn\'t exist.');
-        }
-
-        $this->floorRepository->delete($id);
-
-        return response()->json([], 204);
-    }
-
-    /**
      * @param User $user
      * @return array
      */

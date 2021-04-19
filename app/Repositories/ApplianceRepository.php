@@ -32,19 +32,13 @@ final class ApplianceRepository extends Repository
      */
     public function getFilteredAppliances(array $filters)
     {
-        $query = DB::table('appliances')->select(
-                'appliances.id AS appliance_id',
-                'appliances.name AS appliance_name',
-                'appliance_types.name AS appliance_type_name',
-                'rooms.id AS room_id',
-                'rooms.name AS room_name',
-                'floors.id AS floor_id',
-                'floors.name AS floor_name',
-                'buildings.id AS building_id',
-                'buildings.name AS building_name',
-                'users.id AS user_id',
-                'users.first_name AS user_first_name',
-                'users.last_name AS user_last_name')
+        $query = $this->model->select(
+                'appliances.id',
+                'appliances.name',
+                'appliances.appliance_type_id',
+                'appliances.room_id',
+                'appliances.created_at')
+            ->with('room.floor.building.user', 'applianceType')
             ->leftJoin('appliance_types', 'appliances.appliance_type_id', '=', 'appliance_types.id')
             ->leftJoin('rooms', 'appliances.room_id', '=', 'rooms.id')
             ->leftJoin('floors', 'rooms.floor_id', '=', 'floors.id')
