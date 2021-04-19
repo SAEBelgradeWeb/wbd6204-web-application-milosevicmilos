@@ -49,7 +49,7 @@ export default {
   },
   beforeCreate() {
     // Set colors in theme
-    const colors = ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark']
+    const colors = ['primary', 'secondary', 'success', 'info', 'warning', 'danger', 'light', 'dark', 'semi-dark']
 
     // eslint-disable-next-line no-plusplus
     for (let i = 0, len = colors.length; i < len; i++) {

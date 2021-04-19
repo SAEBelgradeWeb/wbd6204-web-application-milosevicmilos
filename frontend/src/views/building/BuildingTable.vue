@@ -34,7 +34,6 @@
         <vue-good-table
           :columns="columns"
           :rows="rows"
-          :rtl="direction"
           :search-options="{
             enabled: true,
             externalQuery: searchTerm }"
@@ -188,18 +187,6 @@ export default {
       index: 0,
       searchTerm: '',
     }
-  },
-  computed: {
-    direction() {
-      if (store.state.appConfig.isRTL) {
-        // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-        this.dir = true
-        return this.dir
-      }
-      // eslint-disable-next-line vue/no-side-effects-in-computed-properties
-      this.dir = false
-      return this.dir
-    },
   },
   created() {
     let columns = [
