@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Models\Appliance;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\DB;
 
 final class ApplianceRepository extends Repository
 {
@@ -23,8 +22,34 @@ final class ApplianceRepository extends Repository
      */
     public function get(int $id): Model
     {
-        return $this->findOrFail($id)->load('applianceType');
+        return $this->findOrFail($id)->load(['room', 'applianceType']);
     }
+
+    /**
+     * @param array $data
+     * @return Model
+     */
+    public function create(array $data): Model
+    {
+        $appliance = $this->model->create($data);
+        $appliance->load(['room', 'applianceType']);
+
+        return $appliance;
+    }
+
+    /**
+     * @param int $id
+     * @param array $data
+     * @return Model
+     */
+    public function update(int $id, array $data): Model
+    {
+        $appliance = parent::update($id, $data);
+        $appliance->load(['room', 'applianceType']);
+
+        return $appliance;
+    }
+
 
     /**
      * @param array $filters

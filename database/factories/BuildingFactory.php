@@ -6,7 +6,7 @@ use App\Models\Building;
 use Exception;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
-class BuildingFactory extends Factory
+final class BuildingFactory extends Factory
 {
     /**
      * The name of the factory's corresponding model.

@@ -155,11 +155,10 @@ export default {
     },
     resetModal() {
       this.selectedBuilding = '';
+      this.allFloors = [];
       this.selectedFloor = '';
       this.nameValue = '';
       this.sizeValue = '';
-      this.selectedFloor = '';
-      this.allFloors = [];
       this.floors_disabled = true;
     },
     handleOk(bvModalEvt) {

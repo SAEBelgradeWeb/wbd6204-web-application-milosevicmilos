@@ -14,7 +14,7 @@
         ref="form"
         @submit.stop.prevent="submitForm"
     >
-      <validation-observer ref="buildingFormObserver">
+      <validation-observer ref="formObserver">
         <b-form-group
             label="Select User"
             label-for="userSelect"
@@ -138,7 +138,7 @@ export default {
       this.submitForm();
     },
     submitForm() {
-      this.$refs.buildingFormObserver.validate().then(success => {
+      this.$refs.formObserver.validate().then(success => {
         if (success) {
           let data = {
             'name': this.nameValue,

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ApplianceController;
+use App\Http\Controllers\ApplianceTypeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\SanctumController;
 use App\Http\Controllers\BuildingController;
@@ -32,6 +33,7 @@ Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(fun
     Route::resource('buildings.floors.rooms', BuildingFloorRoomController::class)->except('put', 'create', 'edit');
     Route::get('rooms', [RoomController::class, 'index'])->name('rooms.index');
     Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
+    Route::get('appliance-types', [ApplianceTypeController::class, 'index'])->name('appliance-types.index');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });

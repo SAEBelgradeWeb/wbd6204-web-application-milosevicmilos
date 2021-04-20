@@ -29,10 +29,12 @@ final class Room extends Model
      */
     protected $visible = [
         'id',
+        'value',
         'building_name',
         'floor_id',
         'floor_name',
         'name',
+        'label',
         'size',
         'created_at',
         'updated_at',
@@ -49,6 +51,8 @@ final class Room extends Model
         'building_name',
         'floor_name',
         'appliances_count',
+        'value',
+        'label',
     ];
 
     /**
@@ -90,5 +94,21 @@ final class Room extends Model
     public function getAppliancesCountAttribute(): int
     {
         return $this->appliances()->count();
+    }
+
+    /**
+     * @return string
+     */
+    public function getLabelAttribute(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getValueAttribute(): string
+    {
+        return $this->id;
     }
 }

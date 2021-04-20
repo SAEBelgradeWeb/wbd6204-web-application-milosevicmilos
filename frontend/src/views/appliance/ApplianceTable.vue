@@ -9,9 +9,9 @@
             <b-col md="4">
               <b-button
                   variant="primary"
-                  v-b-modal.create-building-form
+                  v-b-modal.create-appliance-form
               >
-                Create Building
+                Create Appliance
               </b-button>
 
             </b-col>
@@ -68,14 +68,14 @@
                       class="text-body align-middle mr-25"
                     />
                   </template>
-                  <b-dropdown-item v-b-modal.update-building-form @click="update(props.row)">
+                  <b-dropdown-item v-b-modal.update-appliance-form @click="update(props.row)">
                     <feather-icon
                       icon="Edit2Icon"
                       class="mr-50"
                     />
                     <span>Edit</span>
                   </b-dropdown-item>
-                  <b-dropdown-item @click="deleteBuilding(props.row)">
+                  <b-dropdown-item @click="deleteAppliance(props.row)">
                     <feather-icon
                       icon="TrashIcon"
                       class="mr-50"
@@ -140,8 +140,8 @@
             </div>
           </template>
         </vue-good-table>
-        <create-building></create-building>
-        <update-building v-bind:id="this.id" v-bind:index="this.index"></update-building>
+        <create-appliance></create-appliance>
+        <update-appliance v-bind:appliance="this.appliance"></update-appliance>
       </b-card-code>
     </b-col>
   </b-row>
@@ -154,8 +154,8 @@ import {
 } from 'bootstrap-vue'
 import { VueGoodTable } from 'vue-good-table'
 import ToastificationContent from '@core/components/toastification/ToastificationContent.vue'
-import CreateBuilding from './CreateBuilding.vue'
-import UpdateBuilding from './UpdateBuilding.vue'
+import CreateAppliance from './CreateAppliance.vue'
+import UpdateAppliance from './UpdateAppliance.vue'
 
 export default {
   components: {
@@ -173,17 +173,15 @@ export default {
     BDropdownItem,
     ToastificationContent,
     BButton,
-    CreateBuilding,
-    UpdateBuilding,
+    CreateAppliance,
+    UpdateAppliance,
   },
   data() {
     return {
       pageLength: 5,
-      dir: false,
       columns: this.columns,
       rows: [],
-      id: 0,
-      index: 0,
+      appliance: null,
       searchTerm: '',
     }
   },
@@ -233,12 +231,11 @@ export default {
   },
   methods: {
     update(row) {
-      this.id = row.id;
-      this.index = row.originalIndex;
+      this.appliance = row;
     },
-    deleteBuilding(row) {
+    deleteAppliance(row) {
       // TODO: Add confirm box!
-      this.$http.delete('/buildings/' + row.id)
+      this.$http.delete('/appliances/' + row.id)
         .then(res => {
           this.rows.splice(row.originalIndex, 1);
           this.$toast({
@@ -247,19 +244,18 @@ export default {
               title: 'Success',
               icon: 'CheckIcon',
               variant: 'success',
-              text: `Building "${row.name}" has been deleted`
+              text: `Appliance "${row.name}" has been deleted`
             },
           })
         })
         .catch(error => {
-          console.log(error);
           this.$toast({
             component: ToastificationContent,
             props: {
               title: 'Error',
               icon: 'XIcon',
               variant: 'danger',
-              text: 'Something went wrong when trying to delete a building'
+              text: 'Something went wrong when trying to delete an appliance'
             },
           })
         })
