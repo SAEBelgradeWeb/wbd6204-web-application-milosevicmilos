@@ -24,6 +24,7 @@
                                 </div>
                             </div>
                         </div>
+                        @if( ! $user)
                         <div class="col-lg-6">
                             <div class="right-part form-wrap">
                                 <div class="banner-form">
@@ -69,6 +70,7 @@
                                 </div>
                             </div>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>

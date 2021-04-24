@@ -74,7 +74,7 @@ final class DatabaseSeeder extends Seeder
      */
     private function createFloors(Building $building, Collection $applianceTypes): void
     {
-        $floorsCount = random_int(1, 2);  // TODO: Increase to test! (2, 5)
+        $floorsCount = random_int(2, 5);
 
         for ($floorNumber = 0; $floorNumber < $floorsCount; $floorNumber++) {
             $this->command->comment("Creating floor: $floorNumber($floorsCount)");
@@ -95,7 +95,7 @@ final class DatabaseSeeder extends Seeder
      */
     private function createRooms(Floor $floor, Collection $applianceTypes): void
     {
-        $roomCount = random_int(1, 3); // TODO: Increase to test! (2, 10)
+        $roomCount = random_int(2, 10);
         for ($roomNumber = 0; $roomNumber < $roomCount; $roomNumber++) {
             $this->command->comment("Creating room: $roomNumber($roomCount)");
             $room = Room::factory()->create([
@@ -113,7 +113,7 @@ final class DatabaseSeeder extends Seeder
      */
     private function createAppliances(Room $room, Collection $applianceTypes): void
     {
-        $applianceCount = random_int(2, 5);  // TODO: Increase to test! (5, 25)
+        $applianceCount = random_int(5, 25);
         for ($applianceNumber = 0; $applianceNumber < $applianceCount; $applianceNumber++) {
             $this->command->comment("Creating appliance: $applianceNumber($applianceCount)");
             $applianceType = $applianceTypes->random();

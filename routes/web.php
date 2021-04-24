@@ -22,12 +22,6 @@ Route::domain(Config::get('app.url'))->get('/', function () {
     ]);
 })->name('home');
 
-//Route::domain(Config::get('app.url'))
-//    ->middleware('guest')
-//    ->get('/auth/login', function () {
-//    return view('pages.login');
-//})->name('auth.login');
-
 Route::domain(Config::get('app.dashboard_url'))
     ->middleware('auth')
     ->get('/{any}', [ApplicationController::class, 'index'])
