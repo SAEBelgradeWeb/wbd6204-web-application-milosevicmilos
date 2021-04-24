@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 final class Appliance extends Model
 {
@@ -61,5 +62,13 @@ final class Appliance extends Model
     public function applianceType(): BelongsTo
     {
         return $this->belongsTo(ApplianceType::class);
+    }
+
+    /**
+     * @return HasMany
+     */
+    public function consumption(): HasMany
+    {
+        return $this->hasMany(EnergyConsumption::class);
     }
 }

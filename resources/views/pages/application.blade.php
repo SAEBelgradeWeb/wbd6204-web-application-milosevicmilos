@@ -9,7 +9,7 @@
     <meta name="robots" content="noindex">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>KiloWatts - Application</title>
+    <title>{{ config('app.name', 'KiloWatts') }} - Application</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset(mix('css/app.css')) }}">

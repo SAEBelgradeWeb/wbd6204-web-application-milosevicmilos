@@ -21,7 +21,7 @@
         >
           <validation-provider
               #default="{ errors }"
-              name="Filter User Buildings"
+              name="Filter User Buildings (not working)"
           >
             <v-select
                 id="userSelect"

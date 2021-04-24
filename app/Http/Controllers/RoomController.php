@@ -6,8 +6,6 @@ use App\Models\User;
 use App\Repositories\RoomRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Symfony\Component\HttpKernel\Exception\HttpException;
-use Exception;
 
 final class RoomController extends Controller
 {

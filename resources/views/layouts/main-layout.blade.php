@@ -7,7 +7,7 @@
     <meta name="description" content="Track electricity consumption in your buildings!">
     <meta name="robots" content="index, follow">
 
-    <title>KiloWatts</title>
+    <title>{{ config('app.name', 'KiloWatts') }}</title>
 
     <!-- Styles -->
     <link rel="stylesheet" href="{{ asset('assets-home/css/bootstrap.min.css') }}">

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ApiHealthController;
 use App\Http\Controllers\ApplianceController;
 use App\Http\Controllers\ApplianceTypeController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
@@ -9,6 +10,7 @@ use App\Http\Controllers\BuildingFloorController;
 use App\Http\Controllers\BuildingFloorRoomController;
 use App\Http\Controllers\FloorController;
 use App\Http\Controllers\RoomController;
+use App\Http\Controllers\StatisticsController;
 use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Config;
@@ -25,6 +27,8 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+Route::domain(Config::get('app.api_url'))->get('/health', [ApiHealthController::class, 'index'])->name('health');
+
 Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(function () {
     Route::resource('users', UserController::class)->except('put', 'create', 'edit');
     Route::resource('buildings', BuildingController::class)->except('put', 'create', 'edit');
@@ -35,6 +39,8 @@ Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(fun
     Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
     Route::get('appliance-types', [ApplianceTypeController::class, 'index'])->name('appliance-types.index');
 
+    Route::get('dashboard-statistics', [StatisticsController::class, 'dashboard'])->name('statistics.dashboard');
+
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
 
@@ -42,15 +48,7 @@ Route::domain(Config::get('app.api_url'))->post('/sanctum/token', [SanctumContro
 
 // TODO: Clean this up
 if (app()->environment('local')) {
-    Route::domain(Config::get('app.api_url'))->get('/test', function (Request $request) {
+    Route::domain(Config::get('app.api_url'))->get('/test', function () {
 
-        //    $service = new \App\Services\ApplianceFilterService();
-        //
-        //    $appliances = $service->filterAppliances(new User(), [
-        //        'building_id' => 2
-        //    ]);
-        //
-        //
-        //    dd($appliances->toArray());
     });
 }

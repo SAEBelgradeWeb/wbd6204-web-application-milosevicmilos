@@ -164,7 +164,6 @@ export default {
 
             })
             .catch(error => {
-              console.log('Error ' + error);
               this.$toast({
                 component: ToastificationContent,
                 props: {

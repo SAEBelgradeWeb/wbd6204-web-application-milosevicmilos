@@ -5,6 +5,9 @@ let navigation = [
     icon: 'BarChart2Icon',
   },
   {
+    header: 'Tables',
+  },
+  {
     title: 'Space Management',
     icon: 'HomeIcon',
     children: [
@@ -36,5 +39,14 @@ if (localStorage.getItem('userRole') === 'ADMIN') {
     icon: 'UsersIcon',
   });
 }
+
+// navigation.push({
+//     header: 'Settings',
+//   },
+//   {
+//     title: 'Configuration',
+//     route: 'settings',
+//     icon: 'SettingsIcon',
+//   });
 
 export default navigation;

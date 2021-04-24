@@ -50,7 +50,6 @@ final class ApplianceRepository extends Repository
         return $appliance;
     }
 
-
     /**
      * @param array $filters
      * @return mixed
