@@ -30,9 +30,9 @@ final class EnergyConsumptionRepository extends Repository
         );
 
         $totalConsumption = $this->filterQuery($query, $filters)
-                       ->first();
+                                 ->first();
 
-        if ($totalConsumption === null) {
+        if ($totalConsumption === null || $totalConsumption['consumption'] === null) {
             return 0;
         }
 
@@ -109,9 +109,8 @@ final class EnergyConsumptionRepository extends Repository
         );
 
         return $this->filterQuery($query, $filters)
-            ->where('date', '>', now()->subMonths(11))
-
-            ->groupBy('month', 'order_date', 'buildings.id')
+                    ->where('date', '>', now()->subMonths(11))
+                    ->groupBy('month', 'order_date', 'buildings.id')
                     ->orderBy('order_date', 'desc')
                     ->get();
     }
@@ -126,7 +125,8 @@ final class EnergyConsumptionRepository extends Repository
             DB::raw('AVG(consumption) AS average_consumption')
         );
 
-        return $this->filterQuery($query, $filters)->first();
+        return $this->filterQuery($query, $filters)
+                    ->first();
     }
 
     /**
@@ -197,6 +197,10 @@ final class EnergyConsumptionRepository extends Repository
             $sum += $consumption['consumption'];
         }
 
+        if ($sum === 0) {
+            return 0;
+        }
+
         return $this->kiloRoundUp($sum / count($consumptions));
     }
 
@@ -206,6 +210,10 @@ final class EnergyConsumptionRepository extends Repository
      */
     private function kiloRoundUp(float $number): string
     {
+        if ($number === 0) {
+            return 0;
+        }
+
         return round($number /= 1000, 1);
     }
 }

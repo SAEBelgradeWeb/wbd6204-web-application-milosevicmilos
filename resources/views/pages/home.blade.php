@@ -12,7 +12,7 @@
                 <div class="banner-wrap">
                     @if(session('status'))
                         <div role="alert" class="alert alert-primary alert-dismissible fade show homepage-contact-us-banner" style="position: absolute; width: 1113px;">
-                            <strong>Your email verification has been sent!</strong> Please check your inbox.
+                            <strong>User successfully registered!</strong> Please go to login page.
                         </div>
                     @endif
                     <div class="row">

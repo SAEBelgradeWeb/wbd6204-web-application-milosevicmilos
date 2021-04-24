@@ -29,9 +29,6 @@
       >
         <template #button-content>
           <div class="d-sm-flex d-none user-nav">
-            <p class="user-name font-weight-bolder mb-0">
-              {{ username }}
-            </p>
           </div>
           <b-avatar
             size="40"
@@ -86,18 +83,13 @@ export default {
       default: () => {},
     },
   },
-  created() {
-    this.username = localStorage.getItem('userName');
-  },
   methods: {
     logout() {
-      console.log('Logout');
       this.$http.post('/logout')
           .then(result => {
             window.location.href = process.env.MIX_APP_URL;
           })
           .catch(error => {
-            console.log('Error ' + error);
             this.$toast({
               component: ToastificationContent,
               props: {
