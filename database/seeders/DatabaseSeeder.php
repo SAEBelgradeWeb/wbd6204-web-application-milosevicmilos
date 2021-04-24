@@ -57,7 +57,7 @@ final class DatabaseSeeder extends Seeder
             'email_verified_at' => null
         ]);
 
-        $buildings = Building::factory(1)->create([
+        $buildings = Building::factory(3)->create([
                          'user_id' => $regularUser->id
                      ]);
 
@@ -74,7 +74,10 @@ final class DatabaseSeeder extends Seeder
      */
     private function createFloors(Building $building, Collection $applianceTypes): void
     {
-        for ($floorNumber = 0; $floorNumber < random_int(1, 5); $floorNumber++) {
+        $floorsCount = random_int(1, 2);  // TODO: Increase to test! (2, 5)
+
+        for ($floorNumber = 0; $floorNumber < $floorsCount; $floorNumber++) {
+            $this->command->comment("Creating floor: $floorNumber($floorsCount)");
             $floor = Floor::factory()->create([
                 'building_id' => $building->id,
                 'name' => 'Floor ' . $floorNumber,
@@ -92,7 +95,9 @@ final class DatabaseSeeder extends Seeder
      */
     private function createRooms(Floor $floor, Collection $applianceTypes): void
     {
-        for ($roomNumber = 0; $roomNumber < random_int(2, 5); $roomNumber++) {
+        $roomCount = random_int(1, 3); // TODO: Increase to test! (2, 10)
+        for ($roomNumber = 0; $roomNumber < $roomCount; $roomNumber++) {
+            $this->command->comment("Creating room: $roomNumber($roomCount)");
             $room = Room::factory()->create([
                 'floor_id' => $floor->id
             ]);
@@ -108,7 +113,9 @@ final class DatabaseSeeder extends Seeder
      */
     private function createAppliances(Room $room, Collection $applianceTypes): void
     {
-        for ($applianceNumber = 0; $applianceNumber < random_int(5, 15); $applianceNumber++) {
+        $applianceCount = random_int(2, 5);  // TODO: Increase to test! (5, 25)
+        for ($applianceNumber = 0; $applianceNumber < $applianceCount; $applianceNumber++) {
+            $this->command->comment("Creating appliance: $applianceNumber($applianceCount)");
             $applianceType = $applianceTypes->random();
 
             $appliance = Appliance::factory()->create([
@@ -126,33 +133,28 @@ final class DatabaseSeeder extends Seeder
      */
     private function createConsumptionRecords(Appliance $appliance): void
     {
-        for ($monthCount = -12; $monthCount < 2; $monthCount++)
+        for ($dayCount = -400; $dayCount < 30; $dayCount++)
         {
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(4)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(5)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(6)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(7)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(8)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(9)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(10)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(11)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(12)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(13)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(14)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(15)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(16)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(17)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(18)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(19)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(20)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(21)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(22)->minute(0)->second(0)]);
-            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addMonths($monthCount)->hour(23)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(4)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(5)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(6)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(7)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(8)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(9)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(10)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(11)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(12)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(13)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(14)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(15)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(16)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(17)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(18)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(19)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(20)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(21)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(22)->minute(0)->second(0)]);
+            EnergyConsumption::factory()->create(['appliance_id' => $appliance->id, 'date' => now()->addDays($dayCount)->hour(23)->minute(0)->second(0)]);
         }
-
-        // TODO: Create 13 months of records... -12 +1
-        // TODO: Every day...
-        // TODO:
-
     }
 }

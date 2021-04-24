@@ -1,23 +1,30 @@
 <template>
   <b-card no-body>
     <b-card-header>
-      <b-card-title>Monthly Consumption</b-card-title>
+      <b-card-title>This Year Consumption per month (KW)</b-card-title>
     </b-card-header>
 
     <!-- chart -->
     <b-card-body>
-      <chartjs-component-bar-chart
-        :height="400"
-        :data="this.latestBarChart.data"
-        :options="this.latestBarChart.options"
-      />
+      <b-overlay
+          :show="showOverlay"
+          rounded="sm"
+          spinner-variant="primary"
+      >
+        <chartjs-component-bar-chart
+          v-if="chartLoaded"
+          :height="400"
+          :data="this.monthlyConsumption.data"
+          :options="this.monthlyConsumption.options"
+        />
+      </b-overlay>
     </b-card-body>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BCardHeader, BCardBody, BCardTitle,
+  BCard, BCardHeader, BCardBody, BCardTitle, BOverlay
 } from 'bootstrap-vue'
 import ChartjsComponentBarChart from './charts-components/ChartjsComponentBarChart.vue'
 
@@ -28,15 +35,18 @@ export default {
     BCardBody,
     BCardTitle,
     ChartjsComponentBarChart,
+    BOverlay
   },
   data() {
     return {
-      latestBarChart: {
+      showOverlay: true,
+      chartLoaded: false,
+      monthlyConsumption: {
         data: {
-          labels: ['May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+          labels: [],
           datasets: [
             {
-              data: [199, 275, 90, 190, 205, 125, 85, 55, 87, 127, 150, 230, 280, 190],
+              data: [],
               backgroundColor: '#28dac6',
             },
           ],
@@ -51,6 +61,16 @@ export default {
         },
       }
     }
+  },
+  async mounted() {
+    this.chartLoaded = false
+    await this.$http.get('/dashboard/consumption-per-month')
+        .then(result => {
+          this.monthlyConsumption.data.datasets[0].data = result.data.data;
+          this.monthlyConsumption.data.labels = result.data.labels;
+          this.showOverlay = false;
+          this.chartLoaded = true
+        })
   },
 }
 </script>

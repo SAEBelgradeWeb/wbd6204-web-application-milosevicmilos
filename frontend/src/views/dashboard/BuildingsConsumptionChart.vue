@@ -3,26 +3,33 @@
     <b-card-header>
       <div>
         <b-card-title>
-          Buildings Consumption
+          Total Buildings Consumption for the past year (KW)
         </b-card-title>
       </div>
     </b-card-header>
 
     <!-- chart -->
     <b-card-body>
-      <chartjs-component-line-chart
-        :height="400"
-        :data="lineChart.data"
-        :options="lineChart.options"
-        :plugins="plugins"
-      />
+      <b-overlay
+          :show="showOverlay"
+          rounded="sm"
+          spinner-variant="primary"
+      >
+        <chartjs-component-line-chart
+          v-if="chartLoaded"
+          :height="400"
+          :data="buildingsConsumption.data"
+          :options="buildingsConsumption.options"
+          :plugins="plugins"
+        />
+      </b-overlay>
     </b-card-body>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BCardHeader, BCardBody, BCardSubTitle, BCardTitle,
+  BCard, BCardHeader, BCardBody, BCardSubTitle, BCardTitle, BOverlay,
 } from 'bootstrap-vue'
 import ChartjsComponentLineChart from './charts-components/ChartjsComponentLineChart.vue'
 
@@ -41,10 +48,13 @@ export default {
     BCardSubTitle,
     BCardTitle,
     ChartjsComponentLineChart,
+    BOverlay
   },
   data() {
     return {
-      lineChart: {
+      showOverlay: true,
+      chartLoaded: false,
+      buildingsConsumption: {
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -81,8 +91,6 @@ export default {
                 },
                 ticks: {
                   stepSize: 100,
-                  min: 0,
-                  max: 400,
                   fontColor: '#6e6b7b',
                 },
                 gridLines: {
@@ -104,16 +112,8 @@ export default {
           },
         },
         data: {
-          labels: [0, 10, 20, 30, 40, 50, 60, 70, 80, 90, 100, 110, 120, 130, 140],
-          datasets: [
-            {
-              data: [80, 99, 82, 90, 115, 115, 74, 75, 130, 155, 125, 90, 140, 130, 180],
-              label: 'Africa',
-              borderColor: chartColors.primaryColorShade,
-              backgroundColor: chartColors.primaryColorShade,
-              fill: false,
-            },
-          ],
+          labels: [],
+          datasets: [],
         },
       },
       plugins: [
@@ -129,6 +129,24 @@ export default {
         },
       ],
     }
+  },
+  async mounted() {
+    await this.$http.get('/dashboard/consumption-per-building')
+        .then(result => {
+          this.buildingsConsumption.data.labels = result.data.labels;
+          Object.entries(result.data.building).forEach(entry => {
+            const [key, value] = entry;
+            this.buildingsConsumption.data.datasets.push({
+              data: value,
+              label: key,
+              borderColor: chartColors.successColorShade,
+              backgroundColor: chartColors.successColorShade,
+              fill: false,
+            });
+          });
+          this.showOverlay = false;
+          this.chartLoaded = true
+        });
   },
 }
 </script>

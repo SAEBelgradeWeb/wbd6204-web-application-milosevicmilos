@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\EnergyConsumption;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
 
@@ -20,6 +21,103 @@ final class EnergyConsumptionRepository extends Repository
 
     /**
      * @param array $filters
+     * @return float
+     */
+    public function totalConsumption(array $filters): float
+    {
+        $query = $this->model->select(
+            DB::raw('SUM(consumption) AS consumption'),
+        );
+
+        $totalConsumption = $this->filterQuery($query, $filters)
+                       ->first();
+
+        if ($totalConsumption === null) {
+            return 0;
+        }
+
+        return $this->kiloRoundUp($totalConsumption['consumption']);
+    }
+
+    /**
+     * @param array $filters
+     * @return Collection
+     */
+    public function consumptionPerYear(array $filters): Collection
+    {
+        $query = $this->model->select(
+            DB::raw('SUM(consumption) AS consumption'),
+            DB::raw('DATE_FORMAT(date, "%Y") as year'),
+        );
+
+        return $this->filterQuery($query, $filters)
+                    ->groupBy('year')
+                    ->orderBy('year', 'desc')
+                    ->get();
+    }
+
+    /**
+     * @param array $filters
+     * @return Collection
+     */
+    public function consumptionPerMonth(array $filters): Collection
+    {
+        $query = $this->model->select(
+            DB::raw('SUM(consumption) AS consumption'),
+            DB::raw('DATE_FORMAT(date, "%M") as month'),
+            DB::raw('DATE_FORMAT(date, "%y-%m") as order_date')
+        );
+
+        return $this->filterQuery($query, $filters)
+                    ->groupBy('month', 'order_date')
+                    ->orderBy('order_date', 'desc')
+                    ->limit(12)
+                    ->get();
+    }
+
+    /**
+     * @param array $filters
+     * @return Collection
+     */
+    public function consumptionPerWeek(array $filters): Collection
+    {
+        $query = $this->model->select(
+            DB::raw('SUM(consumption) AS consumption'),
+            DB::raw('DATE_FORMAT(date, "%W") as day'),
+            DB::raw('DATE_FORMAT(date, "%y-%m-%d") as order_date')
+        );
+
+        return $this->filterQuery($query, $filters)
+                    ->where('date', '>', now()->subDays(7))
+                    ->groupBy('day', 'order_date')
+                    ->orderBy('order_date', 'desc')
+                    ->limit(7)
+                    ->get();
+    }
+
+    /**
+     * @param array $filters
+     * @return Collection
+     */
+    public function consumptionPerBuilding(array $filters): Collection
+    {
+        $query = $this->model->select(
+            'buildings.name as building_name',
+            DB::raw('SUM(consumption) AS consumption'),
+            DB::raw('DATE_FORMAT(date, "%M") as month'),
+            DB::raw('DATE_FORMAT(date, "%y-%m") as order_date')
+        );
+
+        return $this->filterQuery($query, $filters)
+            ->where('date', '>', now()->subMonths(11))
+
+            ->groupBy('month', 'order_date', 'buildings.id')
+                    ->orderBy('order_date', 'desc')
+                    ->get();
+    }
+
+    /**
+     * @param array $filters
      * @return Model
      */
     public function averageConsumption(array $filters): Model
@@ -28,55 +126,25 @@ final class EnergyConsumptionRepository extends Repository
             DB::raw('AVG(consumption) AS average_consumption')
         );
 
-        $query = $this->filterQuery($query, $filters);
-
-        return $query->first();
+        return $this->filterQuery($query, $filters)->first();
     }
 
-    public function averageConsumptionPerYear(array $filters)
+    /**
+     * @param array $filters
+     * @return float
+     */
+    public function averageConsumptionPerYear(array $filters): float
     {
-        $query = $this->model->select(
-            DB::raw('AVG(consumption) AS average_consumption'),
-            DB::raw('DATE_FORMAT(date, "%Y") as year')
-        );
-
-        return $this->filterQuery($query, $filters)
-                    ->groupBy('year')
-                    ->first();
+        return $this->calculateAverage($this->consumptionPerYear($filters));
     }
 
-    public function averageConsumptionPerMonth(array $filters)
+    /**
+     * @param array $filters
+     * @return float
+     */
+    public function averageConsumptionPerMonth(array $filters): float
     {
-        $query = $this->model->select(
-            DB::raw('AVG(consumption) AS average_consumption'),
-            DB::raw('DATE_FORMAT(date, "%Y-%m") as month')
-        );
-
-        return $this->filterQuery($query, $filters)
-                    ->groupBy('month')
-                    ->first();
-    }
-
-    public function averageConsumptionPerDay(array $filters)
-    {
-        $query = $this->model->select(
-            DB::raw('AVG(consumption) AS average_consumption'),
-            DB::raw('DATE_FORMAT(date, "%Y-%m-%d") as day')
-        );
-
-        return $this->filterQuery($query, $filters)
-                    ->groupBy('day')
-                    ->first();
-    }
-
-    public function averageConsumptionPerHour(array $filters)
-    {
-        $query = $this->model->select(
-            DB::raw('AVG(consumption) AS average_consumption'),
-        );
-
-        return $this->filterQuery($query, $filters)
-                    ->first();
+        return $this->calculateAverage($this->consumptionPerMonth($filters));
     }
 
     /**
@@ -116,5 +184,28 @@ final class EnergyConsumptionRepository extends Repository
         }
 
         return $query;
+    }
+
+    /**
+     * @param Collection $consumptions
+     * @return float
+     */
+    private function calculateAverage(Collection $consumptions): float
+    {
+        $sum = 0;
+        foreach ($consumptions as $consumption) {
+            $sum += $consumption['consumption'];
+        }
+
+        return $this->kiloRoundUp($sum / count($consumptions));
+    }
+
+    /**
+     * @param float $number
+     * @return string
+     */
+    private function kiloRoundUp(float $number): string
+    {
+        return round($number /= 1000, 1);
     }
 }

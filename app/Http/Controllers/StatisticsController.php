@@ -13,34 +13,94 @@ final class StatisticsController extends Controller
      */
     private $energyConsumptionRepository;
 
+    /**
+     * StatisticsController constructor.
+     * @param EnergyConsumptionRepository $energyConsumptionRepository
+     */
     public function __construct(EnergyConsumptionRepository $energyConsumptionRepository)
     {
         $this->energyConsumptionRepository = $energyConsumptionRepository;
     }
 
-    public function dashboard(FilterStatisticsRequest $request): JsonResponse
+    /**
+     * @param FilterStatisticsRequest $request
+     * @return JsonResponse
+     */
+    public function consumptionStatistics(FilterStatisticsRequest $request): JsonResponse
+    {
+        return response()->json([
+            'totalConsumption' => $this->energyConsumptionRepository->totalConsumption($request->all()),
+            'averageConsumptionPerYear' => $this->energyConsumptionRepository->averageConsumptionPerYear($request->all()),
+            'averageConsumptionPerMonth' => $this->energyConsumptionRepository->averageConsumptionPerMonth($request->all()),
+        ]);
+    }
+
+    /**
+     * @param FilterStatisticsRequest $request
+     * @return JsonResponse
+     */
+    public function consumptionPerMonth(FilterStatisticsRequest $request): JsonResponse
     {
         $data = [
-            'average' => $this->energyConsumptionRepository->averageConsumption($request->all()),
-            'averagePerHour' => $this->energyConsumptionRepository->averageConsumptionPerHour($request->all()),
-            'averagePerDay' => $this->energyConsumptionRepository->averageConsumptionPerDay($request->all()),
-            'averagePerMonth' => $this->energyConsumptionRepository->averageConsumptionPerMonth($request->all()),
-            'averagePerYear' => $this->energyConsumptionRepository->averageConsumptionPerYear($request->all()),
+            'data' => [],
+            'labels' => []
         ];
 
-        //- Daily consumption average.
-        //- Monthly consumption average.
-        //- Average hourly consumption (for all 24h).
-        //- Average weekly consumption (for all 7 days).
-        //- Devices that consume most of the electricity.
-        //- Consumption difference with last month.
-        //- Consumption goal (user settings).
-        //- Number of (buildings, floors, rooms, devices).
+        foreach ($this->energyConsumptionRepository->consumptionPerMonth($request->all())->reverse() as $month) {
+            $data['data'][] = $this->kiloRoundUp($month['consumption']);
+            $data['labels'][] = $month['month'];
+        }
+
         return response()->json($data);
     }
 
-    public function appliance(): JsonResponse
+    /**
+     * @param FilterStatisticsRequest $request
+     * @return JsonResponse
+     */
+    public function consumptionPerWeek(FilterStatisticsRequest $request): JsonResponse
     {
+        $data = [
+            'data' => [],
+            'labels' => []
+        ];
 
+        foreach ($this->energyConsumptionRepository->consumptionPerWeek($request->all()) as $day) {
+            $data['data'][] = $this->kiloRoundUp($day['consumption']);
+            $data['labels'][] = $day['day'];
+        }
+
+        return response()->json($data);
+    }
+
+    /**
+     * @param FilterStatisticsRequest $request
+     * @return JsonResponse
+     */
+    public function consumptionPerBuilding(FilterStatisticsRequest $request): JsonResponse
+    {
+        $data = [
+            'labels' => [],
+            'building' => []
+        ];
+
+        foreach ($this->energyConsumptionRepository->consumptionPerBuilding($request->all())->reverse() as $building) {
+            if ( ! in_array($building['month'], $data['labels'], true)) {
+                $data['labels'][] = $building['month'];
+            }
+
+            $data['building'][$building['building_name']][] = $this->kiloRoundUp($building['consumption']);
+        }
+
+        return response()->json($data);
+    }
+
+    /**
+     * @param float $number
+     * @return string
+     */
+    private function kiloRoundUp(float $number): string
+    {
+        return round($number /= 1000, 1);
     }
 }

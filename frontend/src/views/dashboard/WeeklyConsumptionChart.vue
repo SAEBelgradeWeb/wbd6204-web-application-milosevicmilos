@@ -1,23 +1,30 @@
 <template>
   <b-card no-body>
     <b-card-header>
-      <b-card-title>Weekly Consumption</b-card-title>
+      <b-card-title>This Week Consumption per day (KW)</b-card-title>
     </b-card-header>
 
     <!-- chart -->
     <b-card-body>
-      <chartjs-component-horizontal-bar-chart
-        :height="400"
-        :data="horizontalBarChart.data"
-        :options="horizontalBarChart.options"
-      />
+      <b-overlay
+          :show="showOverlay"
+          rounded="sm"
+          spinner-variant="primary"
+      >
+        <chartjs-component-horizontal-bar-chart
+          v-if="chartLoaded"
+          :height="400"
+          :data="weeklyConsumption.data"
+          :options="weeklyConsumption.options"
+        />
+      </b-overlay>
     </b-card-body>
   </b-card>
 </template>
 
 <script>
 import {
-  BCard, BCardBody, BCardHeader, BCardTitle, BCardSubTitle,
+  BCard, BCardBody, BCardHeader, BCardTitle, BCardSubTitle, BOverlay,
 } from 'bootstrap-vue'
 import ChartjsComponentHorizontalBarChart from './charts-components/ChartjsComponentHorizontalBarChart.vue'
 import { $themeColors } from '@themeConfig'
@@ -30,10 +37,13 @@ export default {
     BCardTitle,
     BCardSubTitle,
     ChartjsComponentHorizontalBarChart,
+    BOverlay
   },
   data() {
     return {
-      horizontalBarChart: {
+      showOverlay: true,
+      chartLoaded: false,
+      weeklyConsumption: {
         options: {
           responsive: true,
           maintainAspectRatio: false,
@@ -43,10 +53,10 @@ export default {
           },
         },
         data: {
-          labels: ['MON', 'TUE', 'WED ', 'THU', 'FRI', 'SAT', 'SUN'],
+          labels: [],
           datasets: [
             {
-              data: [710, 350, 470, 580, 230, 460, 120],
+              data: [],
               backgroundColor: $themeColors.info,
               borderColor: 'transparent',
               barThickness: 15,
@@ -55,6 +65,16 @@ export default {
         },
       }
     }
+  },
+  async mounted() {
+    this.chartLoaded = false
+    await this.$http.get('/dashboard/consumption-per-week')
+        .then(result => {
+          this.weeklyConsumption.data.datasets[0].data = result.data.data;
+          this.weeklyConsumption.data.labels = result.data.labels;
+          this.showOverlay = false;
+          this.chartLoaded = true
+        })
   },
 }
 </script>

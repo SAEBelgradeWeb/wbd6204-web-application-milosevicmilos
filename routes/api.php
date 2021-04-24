@@ -39,7 +39,10 @@ Route::domain(Config::get('app.api_url'))->middleware('auth:sanctum')->group(fun
     Route::resource('appliances', ApplianceController::class)->except('put', 'create', 'edit');
     Route::get('appliance-types', [ApplianceTypeController::class, 'index'])->name('appliance-types.index');
 
-    Route::get('dashboard-statistics', [StatisticsController::class, 'dashboard'])->name('statistics.dashboard');
+    Route::get('dashboard/consumption-statistics', [StatisticsController::class, 'consumptionStatistics'])->name('dashboard.consumption-statistics');
+    Route::get('dashboard/consumption-per-month', [StatisticsController::class, 'consumptionPerMonth'])->name('dashboard.consumption-per-month');
+    Route::get('dashboard/consumption-per-week', [StatisticsController::class, 'consumptionPerWeek'])->name('dashboard.consumption-per-week');
+    Route::get('dashboard/consumption-per-building', [StatisticsController::class, 'consumptionPerBuilding'])->name('dashboard.consumption-per-building');
 
     Route::post('/logout', [AuthenticatedSessionController::class, 'destroy'])->name('logout');
 });
