@@ -33,8 +33,7 @@ General prerequisites for the application are:
 
 Steps:
 1. Setup Homestead (follow Laravel documentation)
-2
-   . Clone project with git.
+2. Clone project with GitHub and rename the project folder to **kilo-watts**.
 
 3. Homestead setup DB and URLs mappings:
 ```
