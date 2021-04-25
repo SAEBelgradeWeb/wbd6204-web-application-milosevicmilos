@@ -26,9 +26,6 @@ let routes = [
       pageTitle: 'Buildings Table',
       breadcrumb: [
         {
-          text: 'Table',
-        },
-        {
           text: 'Buildings Table',
           active: true,
         },
@@ -42,9 +39,6 @@ let routes = [
     meta: {
       pageTitle: 'Floors Table',
       breadcrumb: [
-        {
-          text: 'Table',
-        },
         {
           text: 'Floors Table',
           active: true,
@@ -60,9 +54,6 @@ let routes = [
       pageTitle: 'Rooms Table',
       breadcrumb: [
         {
-          text: 'Table',
-        },
-        {
           text: 'Rooms Table',
           active: true,
         },
@@ -77,13 +68,29 @@ let routes = [
       pageTitle: 'Appliances Table',
       breadcrumb: [
         {
-          text: 'Table',
-        },
-        {
           text: 'Appliances Table',
           active: true,
         },
       ],
+    },
+  },
+  {
+    path: '/appliances/:id',
+    name: 'appliance-view',
+    component: () => import('@/views/appliance/ViewAppliance.vue'),
+    meta: {
+      pageTitle: 'View Appliance',
+      breadcrumb: [
+        {
+          text: 'Appliances Table',
+          to: '/appliances',
+        },
+        {
+          text: 'View',
+          active: true,
+        },
+      ],
+      navActiveLink: 'appliances-table',
     },
   },
   {
@@ -108,9 +115,6 @@ if (localStorage.getItem('userRole') === 'ADMIN') {
     meta: {
       pageTitle: 'Users Table',
       breadcrumb: [
-        {
-          text: 'Table',
-        },
         {
           text: 'Users Table',
           active: true,

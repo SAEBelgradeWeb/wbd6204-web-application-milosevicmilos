@@ -60,35 +60,39 @@
 
               <!-- Column: Action -->
               <span v-if="props.column.field === 'action'">
-                <span>
-                  <b-dropdown
-                    variant="link"
-                    toggle-class="text-decoration-none"
-                    no-caret
-                  >
-                    <template v-slot:button-content>
-                      <feather-icon
-                        icon="MoreVerticalIcon"
-                        size="16"
-                        class="text-body align-middle mr-25"
-                      />
-                    </template>
-                    <b-dropdown-item v-b-modal.update-appliance-form @click="update(props.row)">
-                      <feather-icon
-                        icon="Edit2Icon"
-                        class="mr-50"
-                      />
-                      <span>Edit</span>
-                    </b-dropdown-item>
-                    <b-dropdown-item @click="deleteAppliance(props.row)">
-                      <feather-icon
-                        icon="TrashIcon"
-                        class="mr-50"
-                      />
-                      <a>Delete</a>
-                    </b-dropdown-item>
-                  </b-dropdown>
-                </span>
+                <feather-icon
+                    icon="EyeIcon"
+                    size="16"
+                    class="mx-1"
+                    @click="$router.push({ name: 'appliance-view', params: { id: props.row.id }})"
+                />
+                <b-dropdown
+                  variant="link"
+                  toggle-class="text-decoration-none"
+                  no-caret
+                >
+                  <template v-slot:button-content>
+                    <feather-icon
+                      icon="MoreVerticalIcon"
+                      size="16"
+                      class="text-body align-middle mr-25"
+                    />
+                  </template>
+                  <b-dropdown-item v-b-modal.update-appliance-form @click="update(props.row)">
+                    <feather-icon
+                      icon="Edit2Icon"
+                      class="mr-50"
+                    />
+                    <span>Edit</span>
+                  </b-dropdown-item>
+                  <b-dropdown-item @click="deleteAppliance(props.row)">
+                    <feather-icon
+                      icon="TrashIcon"
+                      class="mr-50"
+                    />
+                    <a>Delete</a>
+                  </b-dropdown-item>
+                </b-dropdown>
               </span>
 
               <!-- Column: Common -->
@@ -242,6 +246,9 @@ export default {
   methods: {
     update(row) {
       this.appliance = row;
+    },
+    viewAppliance(row) {
+
     },
     deleteAppliance(row) {
       // TODO: Add confirm box!
