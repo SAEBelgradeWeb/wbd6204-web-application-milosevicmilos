@@ -4,7 +4,10 @@ namespace App\Http\Controllers;
 
 use App\Http\Requests\Statistics\FilterStatisticsRequest;
 use App\Repositories\EnergyConsumptionRepository;
+use Illuminate\Contracts\Container\BindingResolutionException;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 
 final class StatisticsController extends Controller
 {
@@ -14,12 +17,25 @@ final class StatisticsController extends Controller
     private $energyConsumptionRepository;
 
     /**
+     * @var Cache
+     */
+    private $cache;
+
+    /**
+     * @var Auth
+     */
+    private $auth;
+
+    /**
      * StatisticsController constructor.
      * @param EnergyConsumptionRepository $energyConsumptionRepository
+     * @throws BindingResolutionException
      */
     public function __construct(EnergyConsumptionRepository $energyConsumptionRepository)
     {
         $this->energyConsumptionRepository = $energyConsumptionRepository;
+        $this->cache = app()->make('cache');
+        $this->auth = app()->make('auth');
     }
 
     /**
@@ -28,11 +44,20 @@ final class StatisticsController extends Controller
      */
     public function consumptionStatistics(FilterStatisticsRequest $request): JsonResponse
     {
-        return response()->json([
+        $cacheKey = 'consumption-statistics-' . $this->auth->user()->id;
+        if ($data = $this->cache->get($cacheKey)) {
+            return response()->json($data);
+        }
+
+        $data = [
             'totalConsumption' => $this->energyConsumptionRepository->totalConsumption($request->all()),
             'averageConsumptionPerYear' => $this->energyConsumptionRepository->averageConsumptionPerYear($request->all()),
             'averageConsumptionPerMonth' => $this->energyConsumptionRepository->averageConsumptionPerMonth($request->all()),
-        ]);
+        ];
+
+        $this->cache->put($cacheKey, $data, 600);
+
+        return response()->json($data);
     }
 
     /**
@@ -41,6 +66,11 @@ final class StatisticsController extends Controller
      */
     public function consumptionPerMonth(FilterStatisticsRequest $request): JsonResponse
     {
+        $cacheKey = 'consumption-per-month-' . $this->auth->user()->id;
+        if ($data = $this->cache->get($cacheKey)) {
+            return response()->json($data);
+        }
+
         $data = [
             'data' => [],
             'labels' => []
@@ -51,6 +81,8 @@ final class StatisticsController extends Controller
             $data['labels'][] = $month['month'];
         }
 
+        $this->cache->put($cacheKey, $data, 600);
+
         return response()->json($data);
     }
 
@@ -60,6 +92,11 @@ final class StatisticsController extends Controller
      */
     public function consumptionPerWeek(FilterStatisticsRequest $request): JsonResponse
     {
+        $cacheKey = 'consumption-per-week-' . $this->auth->user()->id;
+        if ($data = $this->cache->get($cacheKey)) {
+            return response()->json($data);
+        }
+
         $data = [
             'data' => [],
             'labels' => []
@@ -70,6 +107,8 @@ final class StatisticsController extends Controller
             $data['labels'][] = $day['day'];
         }
 
+        $this->cache->put($cacheKey, $data, 600);
+
         return response()->json($data);
     }
 
@@ -79,6 +118,11 @@ final class StatisticsController extends Controller
      */
     public function consumptionPerBuilding(FilterStatisticsRequest $request): JsonResponse
     {
+        $cacheKey = 'consumption-per-building-' . $this->auth->user()->id;
+        if ($data = $this->cache->get($cacheKey)) {
+            return response()->json($data);
+        }
+
         $data = [
             'labels' => [],
             'building' => []
@@ -91,6 +135,8 @@ final class StatisticsController extends Controller
 
             $data['building'][$building['building_name']][] = $this->kiloRoundUp($building['consumption']);
         }
+
+        $this->cache->put($cacheKey, $data, 600);
 
         return response()->json($data);
     }
