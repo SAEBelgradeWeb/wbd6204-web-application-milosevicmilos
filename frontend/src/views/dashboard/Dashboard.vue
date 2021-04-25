@@ -11,7 +11,7 @@
               spinner-variant="primary"
           >
             <statistic-card-vertical
-                icon="EyeIcon"
+                icon="PlusIcon"
                 :statistic="this.totalConsumption + ' KW'"
                 statistic-title="Total Consumption"
                 color="info"
@@ -30,7 +30,7 @@
           >
             <statistic-card-vertical
                 color="danger"
-                icon="ShoppingBagIcon"
+                icon="BatteryChargingIcon"
                 :statistic="this.averageConsumptionPerYear + ' KW'"
                 statistic-title="Average Consumption Per Year"
             />
@@ -48,7 +48,7 @@
           >
             <statistic-card-vertical
                 color="success"
-                icon="AwardIcon"
+                icon="ZapIcon"
                 :statistic="this.averageConsumptionPerMonth + ' KW'"
                 statistic-title="Average Consumption Per Month"
             />
