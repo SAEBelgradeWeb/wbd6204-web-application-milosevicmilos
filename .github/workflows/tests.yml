@@ -10,11 +10,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Prepare The Environment
-        run: cp .env.pipeline .env
+        run: cp .env.example .env
       - name: Create Database
         run: |
           sudo systemctl start mysql
-          mysql --user="root" --password="root" -e "CREATE DATABASE kilo_watts character set UTF8mb4 collate utf8mb4_bin;"
+          mysql --user="root" --password="root" -e "CREATE DATABASE kilo-watts character set UTF8mb4 collate utf8mb4_bin;"
       - name: Remove composer.lock
         run: rm composer.lock
       - name: Install Composer Dependencies
