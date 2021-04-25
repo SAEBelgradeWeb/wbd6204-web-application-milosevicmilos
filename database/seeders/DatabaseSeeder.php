@@ -57,7 +57,7 @@ final class DatabaseSeeder extends Seeder
             'email_verified_at' => null
         ]);
 
-        $buildings = Building::factory()->create([
+        $buildings = Building::factory(3)->create([
                          'user_id' => $regularUser->id
                      ]);
 
@@ -95,7 +95,7 @@ final class DatabaseSeeder extends Seeder
      */
     private function createRooms(Floor $floor, Collection $applianceTypes): void
     {
-        $roomCount = random_int(1, 4);
+        $roomCount = random_int(1, 2);
         for ($roomNumber = 0; $roomNumber < $roomCount; $roomNumber++) {
             $this->command->comment("Creating room: $roomNumber($roomCount)");
             $room = Room::factory()->create([
