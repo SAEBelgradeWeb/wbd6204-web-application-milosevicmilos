@@ -27,13 +27,3 @@ jobs:
         run: php artisan serve &
       - name: Run unit and feature tests
         run: phpunit
-        uses: actions/upload-artifact@v2
-        with:
-          name: screenshots
-          path: tests/Browser/screenshots
-      - name: Upload Console Logs
-        if: failure()
-        uses: actions/upload-artifact@v2
-        with:
-          name: console
-          path: tests/Browser/console
